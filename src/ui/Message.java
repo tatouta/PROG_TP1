@@ -20,6 +20,6 @@ public class Message {
      * @param s The message to be displayed.
      */
     public static void send( String s ) {
-	System.out.println( s );
+	    System.out.println( s );
     }
 }
