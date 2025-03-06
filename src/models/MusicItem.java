@@ -64,9 +64,9 @@ public class MusicItem {
 
     public String toString() {
         String string = (
-                "Id: " + this.id + "\n" +
-                "Title: " + this.title + "\n" +
-                "Release Year: " + this.releaseYear
+                "Id=" + this.id + ", " +
+                "Title=" + this.title + ", " +
+                "Release Year=" + this.releaseYear
         );
         return string;
     }

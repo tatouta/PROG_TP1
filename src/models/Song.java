@@ -19,11 +19,12 @@ public class Song extends MusicItem {
 
     public String toString() {
         String string = super.toString();
-        string += "\n" + (
-                "Artist: " + this.artist + "\n" +
-                "Genre: " + this.genre + "\n" +
-                "Duration: " + this.duration + "s"
-        );
+        string = getInfo() + " [" + (
+                string + ", " +
+                "Artist=" + this.artist + ", " +
+                "Genre=" + this.genre + ", " +
+                "Duration=" + this.duration + "s"
+        ) + "]";
         return string;
     }
 
@@ -35,8 +36,7 @@ public class Song extends MusicItem {
     }
 
     public String getInfo() {
-        String info = "";
-        return info;
+        return "Song";
     }
 
 }

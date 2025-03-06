@@ -18,11 +18,12 @@ public class Podcast extends MusicItem {
 
     public String toString() {
         String string = super.toString();
-        string += "\n" + (
-            "Host: " + this.host + "\n" +
-            "Episode Number: " + this.episodeNumber + "\n" +
-            "Topic: " + this.topic
-        );
+        string = getInfo() + " ["  + (
+                string + ", " +
+                "Host=" + this.host + ", " +
+                "Episode Number=" + this.episodeNumber + ", " +
+                "Topic=" + this.topic
+        ) + "]";
         return string;
     }
 
@@ -34,8 +35,7 @@ public class Podcast extends MusicItem {
     }
 
     public String getInfo() {
-        String info = "";
-        return info;
+        return "Podcast";
     }
 
 }
