@@ -46,27 +46,33 @@ public abstract class MusicItem {
         this.releaseYear = releaseYear;
     }
 
+    protected void setIsPlaying(boolean isPlaying) {
+        this.isPlaying = isPlaying;
+    }
+
     // Play, pause and stop methods
 
     public void play() {
-        System.out.println("Playing Item" + this.id + " of " + this.releaseYear + " " + this.title + ".");
+        this.isPlaying = true;
+        System.out.println("Playing Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
     }
 
     public void pause() {
-        System.out.println("Pausing Item" + this.id + " of " + this.releaseYear + " " + this.title + ".");
+        this.isPlaying = false;
+        System.out.println("Pausing Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
     }
 
     public void stop() {
-        System.out.println("Stopping Item" + this.id + " of " + this.releaseYear + " " + this.title + ".");
-        System.out.println("stop!");
+        this.isPlaying = false;
+        System.out.println("Stopping Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
     }
 
     // toString method
 
     public String toString() {
         String string = (
-                "Id=" + this.id + ", " +
-                "Title=" + this.title + ", " +
+                "Id=" + getId() + ", " +
+                "Title=" + getTitle() + ", " +
                 "Release Year=" + this.releaseYear
         );
         return string;

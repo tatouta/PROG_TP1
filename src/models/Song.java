@@ -15,6 +15,32 @@ public class Song extends MusicItem {
         this.duration = Integer.parseInt(parts[6]);
     }
 
+    // Play, pause and stop methods
+
+    public void play() {
+        setIsPlaying(true);
+        System.out.println("Playing " + getTrigger() + ".");
+    }
+
+    public void pause() {
+        setIsPlaying(false);
+        System.out.println("Pausing " + getTrigger() + ".");
+    }
+
+    public void stop() {
+        setIsPlaying(false);
+        System.out.println("Stopping " + getTrigger() + ".");
+    }
+
+    private String getTrigger() {
+        return (
+                getInfo() + " of " +
+                getReleaseYear() + " " +
+                getTitle() + "by " +
+                this.artist
+        );
+    }
+
     // toString method
 
     public String toString() {
@@ -31,8 +57,16 @@ public class Song extends MusicItem {
     // abstract methods
 
     public String toCSV() {
-        String conversion = "";
-        return conversion;
+        String csv = (
+                getInfo().toLowerCase() + "," +
+                getId() + "," +
+                getTitle() + "," +
+                getReleaseYear() + "," +
+                this.artist + "," +
+                this.genre + "," +
+                this.duration
+        );
+        return csv;
     }
 
     public String getInfo() {

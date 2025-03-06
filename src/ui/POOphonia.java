@@ -33,9 +33,6 @@ public class POOphonia {
 		// Display welcome message
 		Message.send( "***** POOphonia: Welcome! *****" );
 
-		Song item = new Song(new String[] {"song", "1", "Imagine", "1971", "John Lennon", "Rock", "183"});
-		System.out.println(item.toString());
-
 		// Initialize the music library
 		MusicLibrary library = new MusicLibrary();
 
