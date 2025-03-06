@@ -50,7 +50,7 @@ public class MusicLibrary {
         MusicItem item = findItem(id);
         if (item != null) {
             this.search = findIndex(id);
-            System.out.println("Playing " + item.getInfo() + " of 1975 Bohemian Rhapsody by Queen.");
+
         }
     }
 
@@ -71,22 +71,26 @@ public class MusicLibrary {
 
     // pour lancer/jouer l'élément musical id.
     public void playItem( int id ) {
-        // empty...
+        MusicItem item = list.get(this.search);
+        item.play();
     }
 
     // pour mettre sur pause l'élément musical qui joue.
     public void pauseItem() {
-        // empty...
+        MusicItem item = list.get(this.search);
+        item.pause();
     }
 
     // pour arrêter l'élément musical qui joue.
     public void stopItem() {
-        // empty...
+        MusicItem item = list.get(this.search);
+        item.stop();
     }
 
     // pour vider la liste des éléments musicaux présents dans la librairie
     public void clearAllItems() {
-        // empty...
+        list.clear();
+        System.out.println("Music library has been cleared successfully.");
     }
 
     public void save(String filePath) {

@@ -1,6 +1,6 @@
 package models;
 
-public class MusicItem {
+public abstract class MusicItem {
 
     private int id;
     private String title;
@@ -49,14 +49,15 @@ public class MusicItem {
     // Play, pause and stop methods
 
     public void play() {
-        System.out.println("play!");
+        System.out.println("Playing Item" + this.id + " of " + this.releaseYear + " " + this.title + ".");
     }
 
     public void pause() {
-        System.out.println("pause!");
+        System.out.println("Pausing Item" + this.id + " of " + this.releaseYear + " " + this.title + ".");
     }
 
     public void stop() {
+        System.out.println("Stopping Item" + this.id + " of " + this.releaseYear + " " + this.title + ".");
         System.out.println("stop!");
     }
 
@@ -73,7 +74,7 @@ public class MusicItem {
 
     // Abstrait methods
 
-    public String toCSV() {return "";}
-    public String getInfo() {return "";}
+    public abstract String toCSV();
+    public abstract String getInfo();
 
 }
