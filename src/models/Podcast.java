@@ -14,6 +14,20 @@ public class Podcast extends MusicItem {
         this.topic = parts[6];
     }
 
+    // toString method
+
+    public String toString() {
+        String string = super.toString();
+        string += "\n" + (
+            "Host: " + this.host + "\n" +
+            "Episode Number: " + this.episodeNumber + "\n" +
+            "Topic: " + this.topic
+        );
+        return string;
+    }
+
+    // abstract methods
+
     public String toCSV() {
         String conversion = "";
         return conversion;

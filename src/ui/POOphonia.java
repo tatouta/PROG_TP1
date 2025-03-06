@@ -1,5 +1,9 @@
 package ui;
 
+import models.Album;
+import models.MusicItem;
+import models.Podcast;
+import models.Song;
 import services.MusicLibrary;
 import services.CommandProcessor;
 
@@ -26,19 +30,20 @@ public class POOphonia {
      */
     public static void main( String[] args ) {
 
-	// Display welcome message
-	Message.send( "***** POOphonia: Welcome! *****" );
+		// Display welcome message
+		Message.send( "***** POOphonia: Welcome! *****" );
 
-	// Initialize the music library
-	MusicLibrary library = new MusicLibrary();
+		// Initialize the music library
+		MusicLibrary library = new MusicLibrary();
 
-	// Process commands from the default data/commands.txt file
-	CommandProcessor.processCommands( library );
+		// Process commands from the default data/commands.txt file
+		CommandProcessor.processCommands( library );
 
-	// Save the library to the default file data/POOphonia.csv file
-	library.save( "" );
+		// Save the library to the default file data/POOphonia.csv file
+		library.save( "" );
 
-	// Display exit message
-	Message.send( "***** POOphonia: Goodbye! *****" );
+		// Display exit message
+		Message.send( "***** POOphonia: Goodbye! *****" );
+
     }
 }

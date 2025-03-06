@@ -1,6 +1,6 @@
 package models;
 
-public abstract class MusicItem {
+public class MusicItem {
 
     private int id;
     private String title;
@@ -49,26 +49,31 @@ public abstract class MusicItem {
     // Play, pause and stop methods
 
     public void play() {
-      // empty...
+        System.out.println("play!");
     }
 
     public void pause() {
-        // empty...
+        System.out.println("pause!");
     }
 
     public void stop() {
-        // empty...
+        System.out.println("stop!");
     }
 
     // toString method
 
     public String toString() {
-        return this.title;
+        String string = (
+                "Id: " + this.id + "\n" +
+                "Title: " + this.title + "\n" +
+                "Release Year: " + this.releaseYear
+        );
+        return string;
     }
 
     // Abstrait methods
 
-    public abstract String toCSV();
-    public abstract String getInfo();
+    public String toCSV() {return "";}
+    public String getInfo() {return "";}
 
 }

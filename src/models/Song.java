@@ -15,6 +15,20 @@ public class Song extends MusicItem {
         this.duration = Integer.parseInt(parts[6]);
     }
 
+    // toString method
+
+    public String toString() {
+        String string = super.toString();
+        string += "\n" + (
+                "Artist: " + this.artist + "\n" +
+                "Genre: " + this.genre + "\n" +
+                "Duration: " + this.duration + "s"
+        );
+        return string;
+    }
+
+    // abstract methods
+
     public String toCSV() {
         String conversion = "";
         return conversion;

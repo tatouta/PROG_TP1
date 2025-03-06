@@ -15,6 +15,20 @@ public class Album extends MusicItem {
         this.label = parts[6];
     }
 
+    // toString method
+
+    public String toString() {
+        String string = super.toString();
+        string += "\n" + (
+                "Artist: " + this.artist + "\n" +
+                "Number Of Tracks: " + this.numberOfTracks + "\n" +
+                "Label: " + this.label
+        );
+        return string;
+    }
+
+    // abstract methods
+
     public String toCSV() {
         String conversion = "";
         return conversion;
