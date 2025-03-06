@@ -14,6 +14,32 @@ public class Podcast extends MusicItem {
         this.topic = parts[6];
     }
 
+    // Play, pause and stop methods
+
+    public void play() {
+        setIsPlaying(true);
+        System.out.println("Playing " + getTrigger() + ".");
+    }
+
+    public void pause() {
+        setIsPlaying(false);
+        System.out.println("Pausing " + getTrigger() + ".");
+    }
+
+    public void stop() {
+        setIsPlaying(false);
+        System.out.println("Stopping " + getTrigger() + ".");
+    }
+
+    private String getTrigger() {
+        return (
+                getInfo() + " of " +
+                getReleaseYear() + " " +
+                getTitle() + "by " +
+                this.host
+        );
+    }
+
     // toString method
 
     public String toString() {
@@ -30,8 +56,16 @@ public class Podcast extends MusicItem {
     // abstract methods
 
     public String toCSV() {
-        String conversion = "";
-        return conversion;
+        String csv = (
+                getInfo().toLowerCase() + "," +
+                getId() + "," +
+                getTitle() + "," +
+                getReleaseYear() + "," +
+                this.host + "," +
+                this.episodeNumber + "," +
+                this.topic
+        );
+        return csv;
     }
 
     public String getInfo() {
