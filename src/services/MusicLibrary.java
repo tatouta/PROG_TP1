@@ -95,7 +95,7 @@ public class MusicLibrary {
     }
 
     public void save(String filePath) {
-        MusicLibraryFileHandler.saveLibrary(this.list, "POOphonia");
+        MusicLibraryFileHandler.saveLibrary(this.list, filePath);
     }
 
 }
