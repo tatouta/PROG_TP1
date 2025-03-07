@@ -68,44 +68,20 @@ public class CommandProcessor {
         boolean error = false;
         String action = getAction(command);
         String parameters = getParameters(command, action);
-        switch(action.toUpperCase()) {
-            case "SOURCE":
-                error = source(library, parameters, fileName);
-                break;
-            case "LOAD":
-                error = load(library, parameters);
-                break;
-            case "SAVE":
-                error = save(library, parameters);
-                break;
-            case "ADD":
-                error = add(library, parameters);
-                break;
-            case "REMOVE":
-                error = remove(library, parameters);
-                break;
-            case "SEARCH":
-                error = search(library, parameters);
-                break;
-            case "PLAY":
-                error = play(library, parameters);
-                break;
-            case "PAUSE":
-                error = pause(library);
-                break;
-            case "STOP":
-                error = stop(library);
-                break;
-            case "CLEAR":
-                error = clear(library);
-                break;
-            case "LIST":
-                error = list(library);
-                break;
-            default:
-                error = true;
-                break;
-        }
+        error = switch (action.toUpperCase()) {
+            case "SOURCE" -> source(library, parameters, fileName);
+            case "LOAD" -> load(library, parameters);
+            case "SAVE" -> save(library, parameters);
+            case "ADD" -> add(library, parameters);
+            case "REMOVE" -> remove(library, parameters);
+            case "SEARCH" -> search(library, parameters);
+            case "PLAY" -> play(library, parameters);
+            case "PAUSE" -> pause(library);
+            case "STOP" -> stop(library);
+            case "CLEAR" -> clear(library);
+            case "LIST" -> list(library);
+            default -> true;
+        };
         return error;
     }
 
