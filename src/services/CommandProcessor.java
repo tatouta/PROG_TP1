@@ -89,7 +89,7 @@ public class CommandProcessor {
             case "LOAD" -> load(library, parameters);
             case "SAVE" -> save(library, parameters);
             case "ADD" -> add(library, parameters, commandLine);
-            case "REMOVE" -> remove(library, parameters);
+            case "REMOVE" -> remove(library, parameters, commandLine);
             case "SEARCH" -> search(library, parameters);
             case "PLAY" -> play(library, parameters);
             case "PAUSE" -> pause(library);
@@ -233,10 +233,25 @@ public class CommandProcessor {
         return error;
     }
 
-    private static boolean remove(MusicLibrary library, String parameters) {
+    private static boolean remove(MusicLibrary library, String parameters, String commandLine) {
         boolean error = false;
-        int id = Integer.parseInt(parameters);
+        if (parameters.isEmpty()) {
+            Message.send(" Invalid REMOVE command: " + commandLine);
+            return true; // Indique une erreur
+        }
+        int id;
+        try {
+            id = Integer.parseInt(parameters);
+        } catch (NumberFormatException e) {
+            Message.send(" Invalid ID for REMOVE command: "+ parameters); // Gère l'erreur
+            return true; // Indique qu'une erreur s'est produite
+        if (id <= 0) {
+            Message.send("Invalid ID for REMOVE command: " + parameters);
+            return true; // Indique une erreur
+        }
         library.removeItem(id);
+        library.getItem()
+        items.getTrigger()
         return error;
     }
 
