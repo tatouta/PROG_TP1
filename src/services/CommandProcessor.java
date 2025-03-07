@@ -25,7 +25,29 @@ public class CommandProcessor {
     }
 
     private static void activateCommand(MusicLibrary library, String command) {
-        Message.send(command);
+        String action = getAction(command);
+        String parameters = getParameters(command, action);
+    }
+
+    private static String getAction(String command) {
+        String action = "";
+        for (int i = 0; i < command.length(); i++) {
+            String character = String.valueOf(command.charAt(i));
+            if (!character.equals(" ")) {
+                action += character;
+            } else {
+                break;
+            }
+        }
+        return action;
+    }
+
+    private static String getParameters(String command, String action) {
+        String parameters = "";
+        if (command.length() > action.length()) {
+            parameters = command.substring(action.length() + 1);
+        }
+        return parameters;
     }
 
 }
