@@ -6,6 +6,7 @@ import models.Podcast;
 import models.Song;
 import services.MusicLibrary;
 import services.CommandProcessor;
+import services.MusicLibraryFileHandler;
 
 /**
  * Main entry point for the POOphonia application.

@@ -1,5 +1,7 @@
 package models;
 
+import ui.Message;
+
 public class Podcast extends MusicItem {
 
     private String host;
@@ -18,17 +20,17 @@ public class Podcast extends MusicItem {
 
     public void play() {
         setIsPlaying(true);
-        System.out.println("Playing " + getTrigger() + ".");
+        Message.send("Playing " + getTrigger() + ".");
     }
 
     public void pause() {
         setIsPlaying(false);
-        System.out.println("Pausing " + getTrigger() + ".");
+        Message.send("Pausing " + getTrigger() + ".");
     }
 
     public void stop() {
         setIsPlaying(false);
-        System.out.println("Stopping " + getTrigger() + ".");
+        Message.send("Stopping " + getTrigger() + ".");
     }
 
     private String getTrigger() {
