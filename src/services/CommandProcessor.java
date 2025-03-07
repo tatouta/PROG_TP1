@@ -96,7 +96,7 @@ public class CommandProcessor {
             case "PAUSE" -> pause(library);
             case "STOP" -> stop(library);
             case "CLEAR" -> clear(library);
-            case "LIST" -> list(library);
+            case "LIST" -> list(library, parameters, commandLine );
             default -> true;
         };
         return error;
@@ -241,9 +241,26 @@ public class CommandProcessor {
         return error;
     }
 
-    private static boolean list(MusicLibrary library) {
+    private static boolean list(MusicLibrary library, String parameters, String commandLine) {
         boolean error = false;
+
+        // Vérifie si la commande LIST a des paramètres supplémentaires
+        if (!parameters.isEmpty()) {
+            Message.send("Invalid LIST command: " + commandLine);
+            return true;
+        }
+
+        // Vérifie si la bibliothèque est vide
+
+        if (library.getItem().isEmpty()) {
+            Message.send("The library is empty.");
+            return false; // Pas d'erreur, mais la bibliothèque est vide
+        }
+
+        // Si la bibliothèque contient des éléments, affiche la liste
         library.listAllItems();
+
+        // Si aucune erreur n'est survenue, retourne false
         return error;
     }
 
