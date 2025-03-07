@@ -69,34 +69,34 @@ public class CommandProcessor {
                 source(library, parameters, commandsName);
                 break;
             case "LOAD":
-                load(library, parameters, commandsName);
+                load(library, parameters);
                 break;
             case "SAVE":
-                save(library, parameters, commandsName);
+                save(library, parameters);
                 break;
             case "ADD":
-                add(library, parameters, commandsName);
+                add(library, parameters);
                 break;
             case "REMOVE":
-                remove(library, parameters, commandsName);
+                remove(library, parameters);
                 break;
             case "SEARCH":
-                search(library, parameters, commandsName);
+                search(library, parameters);
                 break;
             case "PLAY":
-                play(library, parameters, commandsName);
+                play(library, parameters);
                 break;
             case "PAUSE":
-                pause(library, commandsName);
+                pause(library);
                 break;
             case "STOP":
-                stop(library, commandsName);
+                stop(library);
                 break;
             case "CLEAR":
-                clear(library, commandsName);
+                clear(library);
                 break;
             case "LIST":
-                list(library, commandsName);
+                list(library);
                 break;
             default:
                 Message.send("An unknown command is entered.");
@@ -113,7 +113,7 @@ public class CommandProcessor {
         }
     }
 
-    private static void load(MusicLibrary library, String parameters, String commandsName) {
+    private static void load(MusicLibrary library, String parameters) {
         List<MusicItem> items = MusicLibraryFileHandler.loadLibrary(parameters);
         for (int i = 0; i < items.size(); i++) {
             MusicItem item = items.get(i);
@@ -121,23 +121,23 @@ public class CommandProcessor {
         }
     }
 
-    private static void save(MusicLibrary library, String parameters, String commandsName) {
+    private static void save(MusicLibrary library, String parameters) {
         library.save(parameters);
     }
 
-    private static void add(MusicLibrary library, String parameters, String commandsName) {
+    private static void add(MusicLibrary library, String parameters) {
         String[] parts = parameters.split(",");
         MusicItem item = MusicItemFactory.createFromCSV(parts);
         library.addItem(item);
         Message.send(item.getTrigger() + " added to the library successfully.");
     }
 
-    private static void remove(MusicLibrary library, String parameters, String commandsName) {
+    private static void remove(MusicLibrary library, String parameters) {
         int id = Integer.parseInt(parameters);
         library.removeItem(id);
     }
 
-    private static void search(MusicLibrary library, String parameters, String commandsName) {
+    private static void search(MusicLibrary library, String parameters) {
         String[] specifications = parameters.split(" by ");
         if (specifications.length == 1) {
             int id = Integer.parseInt(specifications[0]);
@@ -149,7 +149,7 @@ public class CommandProcessor {
         }
     }
 
-    private static void play(MusicLibrary library, String parameters, String commandsName) {
+    private static void play(MusicLibrary library, String parameters) {
         String[] specifications = parameters.split(" by ");
         if (parameters.isEmpty()) {
             library.playItem();
@@ -163,19 +163,19 @@ public class CommandProcessor {
         }
     }
 
-    private static void pause(MusicLibrary library, String commandsName) {
+    private static void pause(MusicLibrary library) {
         library.pauseItem();
     }
 
-    private static void stop(MusicLibrary library, String commandsName) {
+    private static void stop(MusicLibrary library) {
         library.stopItem();
     }
 
-    private static void clear(MusicLibrary library, String commandsName) {
+    private static void clear(MusicLibrary library) {
         library.clearAllItems();
     }
 
-    private static void list(MusicLibrary library, String commandsName) {
+    private static void list(MusicLibrary library) {
         library.listAllItems();
     }
 
