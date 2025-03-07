@@ -5,15 +5,15 @@ import ui.Message;
 public class Podcast extends MusicItem {
 
     private String host;
-    private int episodeNumber;
     private String topic;
+    private int episodeNumber;
 
     public Podcast(String[] parts) {
         // might get an error for id and releaseYear (string not convertable to integer)
         super(Integer.parseInt(parts[1]), parts[2], Integer.parseInt(parts[1]));
         this.host = parts[4];
-        this.episodeNumber = Integer.parseInt(parts[5]);
-        this.topic = parts[6];
+        this.topic = parts[5];
+        this.episodeNumber = Integer.parseInt(parts[6]);
     }
 
     // Play, pause and stop methods
