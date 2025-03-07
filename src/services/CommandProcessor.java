@@ -17,7 +17,7 @@ public class CommandProcessor {
     private static final int RELEASE_YEAR_MIN = 1850;
     private static final int RELEASE_YEAR_MAX = 2025;
 
-    private static final int DURATION_MIN = 1;
+    private static final int DURATION_MIN = 0;
     private static final int DURATION_MAX = 36000;
 
     private static final int NUMBER_OF_TRACKS_MIN = 1;
@@ -40,16 +40,17 @@ public class CommandProcessor {
         String filePath = "data/" + fileName + ".txt";
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             Message.send("Sourcing " + fileName + "...");
+            boolean error = true;
             String commandLine = reader.readLine();
             while(commandLine != null ) {
                 if (!commandLine.isEmpty() && !String.valueOf(commandLine.charAt(0)).equals("#")) {
-                    boolean error = activateCommandLine(library, commandLine, fileName);
-                    if (error) {
-                        Message.send("Error reading command file: " + fileName);
-                        break;
-                    }
+                    boolean state = activateCommandLine(library, commandLine, fileName);
+                    error = error && state;
                 }
                 commandLine = reader.readLine();
+            }
+            if (error) {
+                Message.send("Error reading command file: " + fileName);
             }
         } catch( IOException e ) {
             Message.send( "Sourcing " + fileName + " failed; file not found");
@@ -212,7 +213,7 @@ public class CommandProcessor {
                                                     Message.send(errorMessage);
                                                 } else {
                                                     library.addItem(item);
-                                                    Message.send(item.getTrigger() + " added to the library successfully.");
+                                                    Message.send(item.getInfo() + " added to the library successfully.");
                                                     error = false;
                                                 }
                                             }
@@ -291,6 +292,33 @@ public class CommandProcessor {
     private static boolean list(MusicLibrary library) {
         boolean error = false;
         library.listAllItems();
+        return error;
+    }
+
+    // verify methods
+
+    private boolean verifyFullParameters(String parameters) {
+        return !parameters.isEmpty();
+    }
+
+    private boolean verifyNumberOfElementsToAdd(String[] parts) {
+        return parts.length == NUMBER_OF_ELEMENT_TO_ADD;
+    }
+
+    private boolean verifyUnicityOfItem(MusicLibrary library, String[] parts) {
+        return !library.compareItems(parts);
+    }
+
+    private boolean verifyIdString(String idString) {
+        boolean error = false;
+        try {
+            int id = Integer.parseInt(idString);
+            if (id < ID_MIN) {
+                error = true;
+            }
+        } catch (NumberFormatException _) {
+            error = true;
+        }
         return error;
     }
 
