@@ -16,7 +16,7 @@ public class CommandProcessor {
         processFile(library, DEFAULT_COMMANDS_NAME);
     }
 
-    private static void processFile(MusicLibrary library, String commandsName) {
+    public static void processFile(MusicLibrary library, String commandsName) {
         Message.send("Sourcing " + commandsName + "...");
         if (commandsName.isEmpty()) {
             commandsName = DEFAULT_COMMANDS_NAME;
