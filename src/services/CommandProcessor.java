@@ -238,23 +238,36 @@ public class CommandProcessor {
         boolean error = false;
         if (parameters.isEmpty()) {
             Message.send(" Invalid REMOVE command: " + commandLine);
-            return true; // Indique une erreur
+            return true;
         }
         int id;
         try {
             id = Integer.parseInt(parameters);
         } catch (NumberFormatException e) {
-            Message.send(" Invalid ID for REMOVE command: "+ parameters); // Gère l'erreur
-            return true; // Indique qu'une erreur s'est produite
+            Message.send(" Invalid ID for REMOVE command: " + parameters); // Gère l'erreur
+            return true;
+        }
         if (id <= 0) {
             Message.send("Invalid ID for REMOVE command: " + parameters);
-            return true; // Indique une erreur
+            return true;
         }
+        // Recherche l'élément par son ID
+
+        MusicItem item = library.getItem(id);
+        // Si l'élément n'est pas trouvé
+        if (item == null) {
+            Message.send("No item found with ID: " + id);
+            return true;
+        }
+
+        // Supprime l'élément de la bibliothèque
         library.removeItem(id);
-        library.getItem()
-        items.getTrigger()
+        Message.send(" Removed "+item.getInfo()+" successfully");
+
+        // Si aucune erreur n'est survenue, retourne false
         return error;
     }
+
 
     private static boolean search(MusicLibrary library, String parameters) {
         boolean error = false;
