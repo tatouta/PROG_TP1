@@ -146,6 +146,10 @@ public class MusicLibrary {
         this.playing = null;
     }
 
+    public boolean isEmpty() {
+        return this.items.isEmpty();
+    }
+
     public void clearAllItems() {
         this.items.clear();
     }
