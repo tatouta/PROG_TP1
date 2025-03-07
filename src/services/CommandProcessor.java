@@ -23,16 +23,16 @@ public class CommandProcessor {
         String filePath = "data/" + fileName + ".txt";
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             Message.send("Sourcing " + fileName + "...");
-            String command = reader.readLine();
-            while(command != null ) {
-                if (!command.isEmpty() && !String.valueOf(command.charAt(0)).equals("#")) {
-                    boolean error = activateCommand(library, command, fileName);
+            String commandLine = reader.readLine();
+            while(commandLine != null ) {
+                if (!commandLine.isEmpty() && !String.valueOf(commandLine.charAt(0)).equals("#")) {
+                    boolean error = activateCommandLine(library, commandLine, fileName);
                     if (error) {
                         Message.send("Error reading command file: " + fileName);
                         break;
                     }
                 }
-                command = reader.readLine();
+                commandLine = reader.readLine();
             }
         } catch( IOException e ) {
             Message.send( "Sourcing " + fileName + " failed; file not found");
@@ -41,10 +41,10 @@ public class CommandProcessor {
 
     // command supplies methods
 
-    private static String getAction(String command) {
+    private static String getCommand(String commandLine) {
         String action = "";
-        for (int i = 0; i < command.length(); i++) {
-            String character = String.valueOf(command.charAt(i));
+        for (int i = 0; i < commandLine.length(); i++) {
+            String character = String.valueOf(commandLine.charAt(i));
             if (!character.equals(" ")) {
                 action += character;
             } else {
@@ -54,21 +54,20 @@ public class CommandProcessor {
         return action;
     }
 
-    private static String getParameters(String command, String action) {
+    private static String getParameters(String commandLine, String command) {
         String parameters = "";
-        if (command.length() > action.length()) {
-            parameters = command.substring(action.length() + 1);
+        if (commandLine.length() > command.length()) {
+            parameters = commandLine.substring(command.length() + 1);
         }
         return parameters;
     }
 
     // activation command method
 
-    private static boolean activateCommand(MusicLibrary library, String command, String fileName) {
-        boolean error = false;
-        String action = getAction(command);
-        String parameters = getParameters(command, action);
-        error = switch (action.toUpperCase()) {
+    private static boolean activateCommandLine(MusicLibrary library, String commandLine, String fileName) {
+        String command = getCommand(commandLine);
+        String parameters = getParameters(commandLine, command);
+        boolean error = switch (command.toUpperCase()) {
             case "SOURCE" -> source(library, parameters, fileName);
             case "LOAD" -> load(library, parameters);
             case "SAVE" -> save(library, parameters);
