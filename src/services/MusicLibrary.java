@@ -8,16 +8,15 @@ import java.util.ArrayList;
 public class MusicLibrary {
 
     private ArrayList <MusicItem> items;
-    private int search;
+    private MusicItem playing;
+    private MusicItem search;
 
     public MusicLibrary() {
         this.items = new ArrayList<>();
-        this.search = 0;
     }
 
     public MusicLibrary(ArrayList <MusicItem> items) {
         this.items = items;
-        this.search = 0;
     }
 
     // item methods
@@ -26,23 +25,7 @@ public class MusicLibrary {
         this.items.add(item);
     }
 
-    public void removeItem( int id ) {
-        int index = findIndex(id);
-        if (index > -1) {
-            this.items.remove(index);
-        }
-    }
-
-    public MusicItem findItem(int id) {
-        MusicItem item = null;
-        int index = findIndex(id);
-        if (index > -1) {
-            item = this.items.get(index);
-        }
-        return item;
-    }
-
-    public int findIndex(int id) {
+    public int getIndex(int id) {
         int index = -1;
         for (int i = 0; i < this.items.size(); i++) {
             MusicItem item = this.items.get(i);
@@ -51,40 +34,62 @@ public class MusicLibrary {
                 break;
             }
         }
-        if (index > -1) {
-            Message.send("The item with the specified ID does not exist.");
-        }
         return index;
     }
 
-    public int findIndex(String title, String artist) {
+    public int getIndex(String title, String artist) {
         int index = -1;
         for (int i = 0; i < this.items.size(); i++) {
             MusicItem item = this.items.get(i);
-            if (!item.getInfo().equals("Podcast") && item.getTitle() == title) {
+            if (item.getArtist() != null && item.getTitle().equals(title) && item.getArtist().equals(artist)) {
                 index = i;
                 break;
             }
         }
-        if (index > -1) {
-            Message.send("The item with the specified ID does not exist.");
-        }
         return index;
     }
 
-    public void searchItem(int id) {
-        int index = findIndex(id);
+    public MusicItem getItem(int id) {
+        MusicItem item = null;
+        int index = getIndex(id);
         if (index > -1) {
-            this.search = findIndex(id);
+            item = this.items.get(index);
+        }
+        return item;
+    }
+
+    public MusicItem getItem(String title, String artist) {
+        MusicItem item = null;
+        int index = getIndex(title, artist);
+        if (index > -1) {
+            item = this.items.get(index);
+        }
+        return item;
+    }
+
+    public void removeItem( int id ) {
+        int index = getIndex(id);
+        if (index > -1) {
+            this.items.remove(index);
+        }
+    }
+
+    public void searchItem(int id) {
+        MusicItem item = getItem(id);
+        if (item != null) {
+            this.search = item;
         }
     }
 
     public void searchItem(String title, String artist) {
-
+        MusicItem item = getItem(title, artist);
+        if (item != null) {
+            this.search = item;
+        }
     }
 
     public void listAllItems() {
-        String display = "";
+        String display = "Library:" + "\n";
         int size = this.items.size();
         int last = size - 1;
         for (int i = 0; i < size; i++) {
@@ -97,24 +102,40 @@ public class MusicLibrary {
         Message.send(display);
     }
 
-    public void playItem( int id ) {
-        MusicItem item = this.items.get(this.search);
-        item.play();
+    public void playItem(MusicItem item) {
+        this.playing = item;
+        this.playing.play();
+    }
+
+    public void playItem() {
+        playItem(this.search);
+    }
+    
+    public void playItem(int id) {
+        MusicItem item = getItem(id);
+        if (item != null) {
+            playItem(item);
+        }
+    }
+
+    public void playItem(String title, String artist) {
+        MusicItem item = getItem(title, artist);
+        if (item != null) {
+            playItem(item);
+        }
     }
 
     public void pauseItem() {
-        MusicItem item = this.items.get(this.search);
-        item.pause();
+        this.playing.pause();
     }
 
     public void stopItem() {
-        MusicItem item = this.items.get(this.search);
-        item.stop();
+        this.playing.stop();
+        this.playing = null;
     }
 
     public void clearAllItems() {
         this.items.clear();
-        Message.send("Music library has been cleared successfully.");
     }
 
     public void save(String filePath) {

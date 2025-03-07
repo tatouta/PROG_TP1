@@ -16,7 +16,8 @@ public class CommandProcessor {
         processFile(library, DEFAULT_COMMANDS_NAME);
     }
 
-    private static void processFile(MusicLibrary library, String commandsName) {
+    public static void processFile(MusicLibrary library, String commandsName) {
+        Message.send("Sourcing " + commandsName + "...");
         if (commandsName.isEmpty()) {
             commandsName = DEFAULT_COMMANDS_NAME;
         }
@@ -128,6 +129,7 @@ public class CommandProcessor {
         String[] parts = parameters.split(",");
         MusicItem item = MusicItemFactory.createFromCSV(parts);
         library.addItem(item);
+        Message.send(item.getTrigger() + " added to the library successfully.");
     }
 
     private static void remove(MusicLibrary library, String parameters) {
@@ -136,11 +138,29 @@ public class CommandProcessor {
     }
 
     private static void search(MusicLibrary library, String parameters) {
-        // empty...
+        String[] specifications = parameters.split(" by ");
+        if (specifications.length == 1) {
+            int id = Integer.parseInt(specifications[0]);
+            library.searchItem(id);
+        } else if (specifications.length == 2) {
+            String title = specifications[0];
+            String artist = specifications[1];
+            library.searchItem(title, artist);
+        }
     }
 
     private static void play(MusicLibrary library, String parameters) {
-        // empty...
+        String[] specifications = parameters.split(" by ");
+        if (parameters.isEmpty()) {
+            library.playItem();
+        } else if (specifications.length == 1) {
+            int id = Integer.parseInt(specifications[0]);
+            library.playItem(id);
+        } else if (specifications.length == 2) {
+            String title = specifications[0];
+            String artist = specifications[1];
+            library.playItem(title, artist);
+        }
     }
 
     private static void pause(MusicLibrary library) {
