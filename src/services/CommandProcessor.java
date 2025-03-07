@@ -66,7 +66,7 @@ public class CommandProcessor {
         String parameters = getParameters(command, action);
         switch(action.toUpperCase()) {
             case "SOURCE":
-                source(library, commandsName, parameters);
+                source(library, parameters, commandsName);
                 break;
             case "LOAD":
                 load(library, parameters);
@@ -105,11 +105,11 @@ public class CommandProcessor {
 
     // method methods
 
-    private static void source(MusicLibrary library, String commandsName, String parameters) {
+    private static void source(MusicLibrary library, String parameters, String commandsName) {
         if (!commandsName.equals(parameters)) {
             processFile(library, parameters);
         } else {
-            Message.send("The command file is already being processed, infinite loop must be avoided.");
+            Message.send("Currently sourcing " + commandsName + "; SOURCE ignored.");
         }
     }
 
