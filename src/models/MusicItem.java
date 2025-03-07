@@ -76,12 +76,20 @@ public abstract class MusicItem {
     // toString method
 
     public String toString() {
-        String string = (
+        return (
                 "Id=" + getId() + ", " +
                 "Title=" + getTitle() + ", " +
                 "Release Year=" + this.releaseYear
         );
-        return string;
+    }
+
+    public String getTrigger() {
+        return (
+                "Item " +
+                getId() + " of " +
+                getReleaseYear() + " " +
+                getTitle()
+        );
     }
 
     // Abstrait methods

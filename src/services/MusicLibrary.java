@@ -89,7 +89,7 @@ public class MusicLibrary {
     }
 
     public void listAllItems() {
-        String display = "";
+        String display = "Library:" + "\n";
         int size = this.items.size();
         int last = size - 1;
         for (int i = 0; i < size; i++) {

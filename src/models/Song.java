@@ -60,16 +60,7 @@ public class Song extends MusicItem {
         Message.send("Stopping " + getTrigger() + ".");
     }
 
-    private String getTrigger() {
-        return (
-                getInfo() + " of " +
-                getReleaseYear() + " " +
-                getTitle() + "by " +
-                this.artist
-        );
-    }
-
-    // toString method
+    // Message methods
 
     public String toString() {
         String string = super.toString();
@@ -80,6 +71,15 @@ public class Song extends MusicItem {
                 "Duration=" + this.duration + "s"
         ) + "]";
         return string;
+    }
+
+    public String getTrigger() {
+        return (
+                getInfo() + " of " +
+                        getReleaseYear() + " " +
+                        getTitle() + "by " +
+                        this.artist
+        );
     }
 
     // abstract methods

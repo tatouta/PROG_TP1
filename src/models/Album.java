@@ -34,16 +34,7 @@ public class Album extends MusicItem {
         Message.send("Stopping " + getTrigger() + ".");
     }
 
-    private String getTrigger() {
-        return (
-                getInfo() + " of " +
-                getReleaseYear() + " " +
-                getTitle() + "by " +
-                this.artist
-        );
-    }
-
-    // toString method
+    // Message methods
 
     public String toString() {
         String string = super.toString();
@@ -54,6 +45,15 @@ public class Album extends MusicItem {
                 "Label=" + this.label
         ) + "]";
         return string;
+    }
+
+    public String getTrigger() {
+        return (
+                getInfo() + " of " +
+                        getReleaseYear() + " " +
+                        getTitle() + "by " +
+                        this.artist
+        );
     }
 
     // abstract methods

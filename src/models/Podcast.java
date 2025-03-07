@@ -33,16 +33,7 @@ public class Podcast extends MusicItem {
         Message.send("Stopping " + getTrigger() + ".");
     }
 
-    private String getTrigger() {
-        return (
-                getInfo() + " of " +
-                getReleaseYear() + " " +
-                getTitle() + "by " +
-                this.host
-        );
-    }
-
-    // toString method
+    // Message methods
 
     public String toString() {
         String string = super.toString();
@@ -53,6 +44,15 @@ public class Podcast extends MusicItem {
                 "Topic=" + this.topic
         ) + "]";
         return string;
+    }
+
+    public String getTrigger() {
+        return (
+                getInfo() + " of " +
+                        getReleaseYear() + " " +
+                        getTitle() + "by " +
+                        this.host
+        );
     }
 
     // abstract methods

@@ -17,6 +17,7 @@ public class CommandProcessor {
     }
 
     private static void processFile(MusicLibrary library, String commandsName) {
+        Message.send("Sourcing " + commandsName + "...");
         if (commandsName.isEmpty()) {
             commandsName = DEFAULT_COMMANDS_NAME;
         }
@@ -128,6 +129,7 @@ public class CommandProcessor {
         String[] parts = parameters.split(",");
         MusicItem item = MusicItemFactory.createFromCSV(parts);
         library.addItem(item);
+        Message.send(item.getTrigger() + " added to the library successfully.");
     }
 
     private static void remove(MusicLibrary library, String parameters) {
