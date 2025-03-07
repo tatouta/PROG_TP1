@@ -104,9 +104,9 @@ public class CommandProcessor {
             case "REMOVE" -> remove(library, parameters, commandLine);
             case "SEARCH" -> search(library, parameters);
             case "PLAY" -> play(library, parameters);
-            case "PAUSE" -> pause(library);
+            case "PAUSE" -> pause(library, parameters, commandLine);
             case "STOP" -> stop(library);
-            case "LIST" -> list(library);
+            case "LIST" -> list(library, parameters, commandLine);
             case "CLEAR" -> clear(library, parameters, commandLine);
             case "EXIT" -> exit(library, parameters, commandLine);
             default -> unknown(commandLine);
@@ -244,10 +244,33 @@ public class CommandProcessor {
         return success;
     }
 
-    private static boolean pause(MusicLibrary library) {
-        boolean success = false;
+    private static boolean pause(MusicLibrary library, String parameters, String commandLine) {
+        boolean error = false;
+
+        // Vérifie si la commande PAUSE a des paramètres supplémentaires
+        if (!parameters.isEmpty()) {
+            Message.send("Invalid PAUSE command: " + commandLine);
+            return true;
+        }
+
+        // Vérifie si un élément est en cours de lecture
+        if (library.getPlayingItem() == null) {
+            Message.send("There is no item currently playing.");
+            return true;
+        }
+
+        // Vérifie si l'élément est déjà en pause
+        if (library.getPlayingItem().isPaused()) {
+            Message.send(library.getPlayingItem().getInfo() + " is already on pause.");
+            return true; // Indique une erreur
+        }
+
+        // Met en pause l'élément en cours de lecture
         library.pauseItem();
-        return success;
+        Message.send("Pausing " + library.getPlayingItem().getInfo() + ".");
+
+        // Si aucune erreur n'est survenue, retourne false
+        return error;
     }
 
     private static boolean stop(MusicLibrary library) {
@@ -256,10 +279,26 @@ public class CommandProcessor {
         return success;
     }
 
-    private static boolean list(MusicLibrary library) {
-        boolean success = false;
+    private static boolean list(MusicLibrary library, String parameters, String commandLine) {
+        boolean error = false;
+
+        // Vérifie si la commande LIST a des paramètres supplémentaires
+        if (!parameters.isEmpty()) {
+            Message.send("Invalid LIST command: " + commandLine);
+            return true;
+        }
+
+        // Vérifie si la bibliothèque est vide
+        if (library.isEmpty()) {
+            Message.send("The library is empty.");
+            return false; // Pas d'erreur, mais la bibliothèque est vide
+        }
+
+        // Si la bibliothèque contient des éléments, affiche la liste
         library.listAllItems();
-        return success;
+
+        // Si aucune erreur n'est survenue, retourne false
+        return error;
     }
 
     private static boolean clear(MusicLibrary library, String parameters, String commanLine) {
