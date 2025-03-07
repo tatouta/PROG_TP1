@@ -66,37 +66,37 @@ public class CommandProcessor {
         String parameters = getParameters(command, action);
         switch(action.toUpperCase()) {
             case "SOURCE":
-                source(library, commandsName, parameters);
+                source(library, parameters, commandsName);
                 break;
             case "LOAD":
-                load(library, parameters);
+                load(library, parameters, commandsName);
                 break;
             case "SAVE":
-                save(library, parameters);
+                save(library, parameters, commandsName);
                 break;
             case "ADD":
-                add(library, parameters);
+                add(library, parameters, commandsName);
                 break;
             case "REMOVE":
-                remove(library, parameters);
+                remove(library, parameters, commandsName);
                 break;
             case "SEARCH":
-                search(library, parameters);
+                search(library, parameters, commandsName);
                 break;
             case "PLAY":
-                play(library, parameters);
+                play(library, parameters, commandsName);
                 break;
             case "PAUSE":
-                pause(library);
+                pause(library, commandsName);
                 break;
             case "STOP":
-                stop(library);
+                stop(library, commandsName);
                 break;
             case "CLEAR":
-                clear(library);
+                clear(library, commandsName);
                 break;
             case "LIST":
-                list(library);
+                list(library, commandsName);
                 break;
             default:
                 Message.send("An unknown command is entered.");
@@ -105,15 +105,15 @@ public class CommandProcessor {
 
     // method methods
 
-    private static void source(MusicLibrary library, String commandsName, String parameters) {
+    private static void source(MusicLibrary library, String parameters, String commandsName) {
         if (!commandsName.equals(parameters)) {
             processFile(library, parameters);
         } else {
-            Message.send("The command file is already being processed, infinite loop must be avoided.");
+            Message.send("Currently sourcing " + commandsName + "; SOURCE ignored.");
         }
     }
 
-    private static void load(MusicLibrary library, String parameters) {
+    private static void load(MusicLibrary library, String parameters, String commandsName) {
         List<MusicItem> items = MusicLibraryFileHandler.loadLibrary(parameters);
         for (int i = 0; i < items.size(); i++) {
             MusicItem item = items.get(i);
@@ -121,23 +121,23 @@ public class CommandProcessor {
         }
     }
 
-    private static void save(MusicLibrary library, String parameters) {
+    private static void save(MusicLibrary library, String parameters, String commandsName) {
         library.save(parameters);
     }
 
-    private static void add(MusicLibrary library, String parameters) {
+    private static void add(MusicLibrary library, String parameters, String commandsName) {
         String[] parts = parameters.split(",");
         MusicItem item = MusicItemFactory.createFromCSV(parts);
         library.addItem(item);
         Message.send(item.getTrigger() + " added to the library successfully.");
     }
 
-    private static void remove(MusicLibrary library, String parameters) {
+    private static void remove(MusicLibrary library, String parameters, String commandsName) {
         int id = Integer.parseInt(parameters);
         library.removeItem(id);
     }
 
-    private static void search(MusicLibrary library, String parameters) {
+    private static void search(MusicLibrary library, String parameters, String commandsName) {
         String[] specifications = parameters.split(" by ");
         if (specifications.length == 1) {
             int id = Integer.parseInt(specifications[0]);
@@ -149,7 +149,7 @@ public class CommandProcessor {
         }
     }
 
-    private static void play(MusicLibrary library, String parameters) {
+    private static void play(MusicLibrary library, String parameters, String commandsName) {
         String[] specifications = parameters.split(" by ");
         if (parameters.isEmpty()) {
             library.playItem();
@@ -163,19 +163,19 @@ public class CommandProcessor {
         }
     }
 
-    private static void pause(MusicLibrary library) {
+    private static void pause(MusicLibrary library, String commandsName) {
         library.pauseItem();
     }
 
-    private static void stop(MusicLibrary library) {
+    private static void stop(MusicLibrary library, String commandsName) {
         library.stopItem();
     }
 
-    private static void clear(MusicLibrary library) {
+    private static void clear(MusicLibrary library, String commandsName) {
         library.clearAllItems();
     }
 
-    private static void list(MusicLibrary library) {
+    private static void list(MusicLibrary library, String commandsName) {
         library.listAllItems();
     }
 
