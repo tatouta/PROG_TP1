@@ -2,7 +2,7 @@ package models;
 
 import ui.Message;
 
-public class Album extends MusicItem {
+public class Album extends Melodie {
 
     private String artist;
     private int numberOfTracks;

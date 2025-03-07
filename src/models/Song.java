@@ -2,7 +2,7 @@ package models;
 
 import ui.Message;
 
-public class Song extends MusicItem {
+public class Song extends Melodie {
 
     private String artist;
     private String genre;
@@ -15,6 +15,32 @@ public class Song extends MusicItem {
         this.artist = parts[4];
         this.genre = parts[5];
         this.duration = Integer.parseInt(parts[6]);
+    }
+
+    // Getters and Setters
+
+    public String getArtist() {
+        return this.artist;
+    }
+
+    public String getGenre() {
+        return this.genre;
+    }
+
+    public int getDuration() {
+        return this.duration;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     // Play, pause and stop methods
