@@ -74,18 +74,12 @@ public class MusicLibrary {
         }
     }
 
-    public void searchItem(int id) {
-        MusicItem item = getItem(id);
-        if (item != null) {
-            this.search = item;
-        }
+    public void searchItem(MusicItem item) {
+        this.search = item;
     }
 
-    public void searchItem(String title, String artist) {
-        MusicItem item = getItem(title, artist);
-        if (item != null) {
-            this.search = item;
-        }
+    public boolean isPlaying() {
+        return this.playing != null;
     }
 
     public void listAllItems() {

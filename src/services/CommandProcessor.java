@@ -102,7 +102,7 @@ public class CommandProcessor {
             case "SAVE" -> save(library, parameters);
             case "ADD" -> add(library, parameters, commandLine);
             case "REMOVE" -> remove(library, parameters, commandLine);
-            case "SEARCH" -> search(library, parameters);
+            case "SEARCH" -> search(library, parameters, commandLine);
             case "PLAY" -> play(library, parameters);
             case "PAUSE" -> pause(library, parameters, commandLine);
             case "STOP" -> stop(library);
@@ -207,23 +207,48 @@ public class CommandProcessor {
                 Message.send("No item found with ID: " + id);
             } else {
                 library.removeItem(id);
-                Message.send("Removed "+item.getInfo()+" successfully");
+                Message.send("Removed " + item.getInfo() + " successfully");
                 success = true;
             }
         }
         return success;
     }
 
-    private static boolean search(MusicLibrary library, String parameters) {
+    private static boolean search(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
-        String[] specifications = parameters.split(" by ");
-        if (specifications.length == 1) {
-            int id = Integer.parseInt(specifications[0]);
-            library.searchItem(id);
-        } else if (specifications.length == 2) {
-            String title = specifications[0];
-            String artist = specifications[1];
-            library.searchItem(title, artist);
+        MusicItem item = null;
+        if (!verifyFullParameters(parameters)) {
+            Message.send("Invalid SEARCH command: " + commandLine);
+        } else {
+            String[] specifications = parameters.split(" by ");
+            if (specifications.length == 1) {
+                String idString = specifications[0];
+                if (verifyId(idString)) {
+                    int id = Integer.parseInt(idString);
+                    item = library.getItem(id);
+                }
+                if (!verifyItem(item)) {
+                    Message.send("SEARCH item ID " + idString + " failed; no such item");
+                }
+            } else if (specifications.length == 2) {
+                String title = specifications[0];
+                String artist = specifications[1];
+                item = library.getItem(title, artist);
+                if (!verifyItem(item)) {
+                    Message.send("SEARCH " + title + " by " + artist + " failed; no item found.");
+                }
+            } else {
+                Message.send("Invalid SEARCH format. Use 'SEARCH <id>' or 'SEARCH <title> by <artist>'");
+            }
+            if (verifyItem(item)) {
+                if (!verifyIsPlaying(library)) {
+                    Message.send(item.getInfo() + " is ready to PLAY");
+                    success = true;
+                    library.searchItem(item);
+                } else {
+                    Message.send(item.toString());
+                }
+            }
         }
         return success;
     }
@@ -435,6 +460,10 @@ public class CommandProcessor {
 
     private static boolean verifyItem(MusicItem item) {
         return item != null;
+    }
+
+    private static boolean verifyIsPlaying(MusicLibrary library) {
+        return !library.isPlaying();
     }
 
 }
