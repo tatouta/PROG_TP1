@@ -136,11 +136,29 @@ public class CommandProcessor {
     }
 
     private static void search(MusicLibrary library, String parameters) {
-        // empty...
+        String[] specifications = parameters.split(" by ");
+        if (specifications.length == 1) {
+            int id = Integer.parseInt(specifications[0]);
+            library.searchItem(id);
+        } else if (specifications.length == 2) {
+            String title = specifications[0];
+            String artist = specifications[1];
+            library.searchItem(title, artist);
+        }
     }
 
     private static void play(MusicLibrary library, String parameters) {
-        // empty...
+        String[] specifications = parameters.split(" by ");
+        if (parameters.isEmpty()) {
+            library.playItem();
+        } else if (specifications.length == 1) {
+            int id = Integer.parseInt(specifications[0]);
+            library.playItem(id);
+        } else if (specifications.length == 2) {
+            String title = specifications[0];
+            String artist = specifications[1];
+            library.playItem(title, artist);
+        }
     }
 
     private static void pause(MusicLibrary library) {

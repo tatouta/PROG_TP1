@@ -34,6 +34,10 @@ public abstract class MusicItem {
         return this.isPlaying;
     }
 
+    public String getArtist() {
+        return null;
+    }
+
     // Setters
 
     public void setId(int id) {
