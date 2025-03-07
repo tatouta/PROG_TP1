@@ -90,7 +90,7 @@ public class CommandProcessor {
             case "LOAD" -> load(library, parameters);
             case "SAVE" -> save(library, parameters);
             case "ADD" -> add(library, parameters, commandLine);
-            case "REMOVE" -> remove(library, parameters);
+            case "REMOVE" -> remove(library, parameters, commandLine);
             case "SEARCH" -> search(library, parameters);
             case "PLAY" -> play(library, parameters);
             case "PAUSE" -> pause(library);
@@ -131,113 +131,65 @@ public class CommandProcessor {
 
     private static boolean add(MusicLibrary library, String parameters, String commandLine) {
         boolean error = true;
-        String errorMessage = "Invalid ADD command: " + commandLine;
-        if (parameters.isEmpty()) {
-            Message.send(errorMessage);
+        if (!verifyFullParameters(parameters)) {
+            Message.send("Invalid ADD command: " + commandLine);
         } else {
-            errorMessage = "Wrong number of elements: " + commandLine;
             String[] parts = parameters.split(",");
-            if (parts.length != NUMBER_OF_ELEMENT_TO_ADD) {
-                Message.send(errorMessage);
+            if (!verifyNumberOfElementsToAdd(parts)) {
+                Message.send("Wrong number of elements: " + commandLine);
             } else {
-                errorMessage = "ADD " + parameters + " failed; item already in library";
-                if (library.compareItems(parts)) {
-                    Message.send(errorMessage);
+                String type = parts[0];
+                String idString = parts[1];
+                String releaseYearString = parts[3];
+                String numberString = parts[6];
+                if (!verifyItemType(type)) {
+                    Message.send("Wrong music item: " + commandLine);
+                } else if (!verifyUnicityOfItem(library, parts)) {
+                    Message.send("ADD " + parameters + " failed; item already in library");
+                } else if (!verifyId(idString)) {
+                    Message.send("Invalid music ID: " + commandLine);
+                } else if (!verifyUnicityOfId(library, idString)) {
+                    Message.send("ADD " + parameters + " failed; ID already used.");
+                } else if (!verifyReleaseYear(releaseYearString)) {
+                    Message.send("Invalid release year: " + commandLine);
+                } else if (isSong(type) && !verifyDuration(numberString)) {
+                    Message.send("Invalid duration: " + commandLine);
+                } else if (isAlbum(type) && !verifyNumberOfTracks(numberString)) {
+                    Message.send("Invalid number of tracks: " + commandLine);
+                } else if (isPodcast(type) && !verifyEpisodeNumber(numberString)) {
+                    Message.send("Invalid episode number: " + commandLine);
                 } else {
-                    errorMessage = "Wrong music item: " + commandLine;
-                    String type = parts[0];
-                    boolean isSong = type.equalsIgnoreCase("song");
-                    boolean isAlbum = type.equalsIgnoreCase("album");
-                    boolean isPodcast = type.equalsIgnoreCase("podcast");
-                    if (!isSong && !isAlbum && !isPodcast) {
-                        Message.send(errorMessage);
+                    MusicItem item = MusicItemFactory.createFromCSV(parts);
+                    if (!verifyItem(item)) {
+                        Message.send("ADD item " + parameters + " failed; no such item");
                     } else {
-                        errorMessage = "Invalid music ID: " + commandLine;
-                        try {
-                            int id = Integer.parseInt(parts[1]);
-                            if (id < ID_MIN) {
-                                Message.send(errorMessage);
-                            } else {
-                                errorMessage = "ADD " + parameters + " failed; ID already used.";
-                                if (library.getItem(id) != null) {
-                                    Message.send(errorMessage);
-                                } else {
-                                    errorMessage = "Invalid release year: " + commandLine;
-                                    try {
-                                        int releaseYear = Integer.parseInt(parts[3]);
-                                        if (releaseYear < RELEASE_YEAR_MIN || releaseYear > RELEASE_YEAR_MAX) {
-                                            Message.send(errorMessage);
-                                        } else {
-                                            boolean success = false;
-                                            if (isSong) {
-                                                errorMessage = "Invalid duration: " + commandLine;
-                                                try {
-                                                    int duration = Integer.parseInt(parts[6]);
-                                                    if (duration < DURATION_MIN || duration > DURATION_MAX) {
-                                                        Message.send(errorMessage);
-                                                    } else {
-                                                        success = true;
-                                                    }
-                                                } catch (NumberFormatException _) {
-                                                    Message.send(errorMessage);
-                                                }
-                                            } else if (isAlbum) {
-                                                errorMessage = "Invalid number of tracks: " + commandLine;
-                                                try {
-                                                    int numberOfTracks = Integer.parseInt(parts[6]);
-                                                    if (numberOfTracks < NUMBER_OF_TRACKS_MIN || numberOfTracks > NUMBER_OF_TRACKS_MAX) {
-                                                        Message.send(errorMessage);
-                                                    } else {
-                                                        success = true;
-                                                    }
-                                                } catch (NumberFormatException _) {
-                                                    Message.send(errorMessage);
-                                                }
-                                            } else {
-                                                errorMessage = "Invalid episode number: " + commandLine;
-                                                try {
-                                                    int episodeNumber = Integer.parseInt(parts[6]);
-                                                    if (episodeNumber < EPISODE_NUMBER_MIN || episodeNumber > EPISODE_NUMBER_MAX) {
-                                                        Message.send(errorMessage);
-                                                    } else {
-                                                        success = true;
-                                                    }
-                                                } catch (NumberFormatException _) {
-                                                    Message.send(errorMessage);
-                                                }
-                                            }
-                                            if (success) {
-                                                errorMessage = "ADD item " + parameters + " failed; no such item";
-                                                MusicItem item = MusicItemFactory.createFromCSV(parts);
-                                                if (item == null) {
-                                                    Message.send(errorMessage);
-                                                } else {
-                                                    library.addItem(item);
-                                                    Message.send(item.getInfo() + " added to the library successfully.");
-                                                    error = false;
-                                                }
-                                            }
-                                        }
-                                    } catch (NumberFormatException _) {
-                                        Message.send(errorMessage);
-                                    }
-                                }
-                            }
-                        } catch (NumberFormatException _) {
-                            Message.send(errorMessage);
-                        }
+                        library.addItem(item);
+                        Message.send(item.getInfo() + " added to the library successfully.");
+                        error = false;
                     }
                 }
-
             }
         }
         return error;
     }
 
-    private static boolean remove(MusicLibrary library, String parameters) {
-        boolean error = false;
-        int id = Integer.parseInt(parameters);
-        library.removeItem(id);
+    private static boolean remove(MusicLibrary library, String parameters, String commandLine) {
+        boolean error = true;
+        if (!verifyFullParameters(parameters)) {
+            Message.send("Invalid REMOVE command: " + commandLine);
+        } else if (!verifyId(parameters)) {
+            Message.send("Invalid ID for REMOVE command: " + parameters);
+        } else {
+            int id = Integer.parseInt(parameters);
+            MusicItem item = library.getItem(id);
+            if (!verifyItem(item)) {
+                Message.send("No item found with ID: " + id);
+            } else {
+                library.removeItem(id);
+                Message.send("Removed "+item.getInfo()+" successfully");
+                error = false;
+            }
+        }
         return error;
     }
 
@@ -295,31 +247,106 @@ public class CommandProcessor {
         return error;
     }
 
+    // type methods
+
+    private static boolean isSong(String type) {
+        return type.equalsIgnoreCase("song");
+    }
+
+    private static boolean isAlbum(String type) {
+        return type.equalsIgnoreCase("album");
+    }
+
+    private static boolean isPodcast(String type) {
+        return type.equalsIgnoreCase("podcast");
+    }
+
     // verify methods
 
-    private boolean verifyFullParameters(String parameters) {
+    private static boolean verifyFullParameters(String parameters) {
         return !parameters.isEmpty();
     }
 
-    private boolean verifyNumberOfElementsToAdd(String[] parts) {
+    private static boolean verifyNumberOfElementsToAdd(String[] parts) {
         return parts.length == NUMBER_OF_ELEMENT_TO_ADD;
     }
 
-    private boolean verifyUnicityOfItem(MusicLibrary library, String[] parts) {
+    private static boolean verifyUnicityOfItem(MusicLibrary library, String[] parts) {
         return !library.compareItems(parts);
     }
 
-    private boolean verifyIdString(String idString) {
-        boolean error = false;
+    private static boolean verifyItemType(String type) {
+        return isSong(type) || isAlbum(type) || isPodcast(type);
+    }
+
+    private static boolean verifyId(String idString) {
+        boolean success;
         try {
             int id = Integer.parseInt(idString);
-            if (id < ID_MIN) {
-                error = true;
-            }
+            success = id >= ID_MIN;
         } catch (NumberFormatException _) {
-            error = true;
+            success = false;
         }
-        return error;
+        return success;
+    }
+
+    private static boolean verifyUnicityOfId(MusicLibrary library, String idString) {
+        boolean success;
+        try {
+            int id = Integer.parseInt(idString);
+            success = library.getItem(id) == null;
+        } catch (NumberFormatException _) {
+            success = false;
+        }
+        return success;
+    }
+
+    private static boolean verifyReleaseYear(String releaseYearString) {
+        boolean success;
+        try {
+            int releaseYear = Integer.parseInt(releaseYearString);
+            success = releaseYear >= RELEASE_YEAR_MIN && releaseYear <= RELEASE_YEAR_MAX;
+        } catch (NumberFormatException _) {
+            success = false;
+        }
+        return success;
+    }
+
+    private static boolean verifyDuration(String durationString) {
+        boolean success;
+        try {
+            int duration = Integer.parseInt(durationString);
+            success = duration >= DURATION_MIN && duration <= DURATION_MAX;
+        } catch (NumberFormatException _) {
+            success = false;
+        }
+        return success;
+    }
+
+    private static boolean verifyNumberOfTracks(String numberOfTracksString) {
+        boolean success;
+        try {
+            int numberOfTracks = Integer.parseInt(numberOfTracksString);
+            success = numberOfTracks >= NUMBER_OF_TRACKS_MIN && numberOfTracks <= NUMBER_OF_TRACKS_MAX;
+        } catch (NumberFormatException _) {
+            success = false;
+        }
+        return success;
+    }
+
+    private static boolean verifyEpisodeNumber(String episodeNumberString) {
+        boolean success;
+        try {
+            int episodeNumber = Integer.parseInt(episodeNumberString);
+            success = episodeNumber >= EPISODE_NUMBER_MIN && episodeNumber <= EPISODE_NUMBER_MAX;
+        } catch (NumberFormatException _) {
+            success = false;
+        }
+        return success;
+    }
+
+    private static boolean verifyItem(MusicItem item) {
+        return item != null;
     }
 
 }
