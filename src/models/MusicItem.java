@@ -1,5 +1,7 @@
 package models;
 
+import ui.Message;
+
 public abstract class MusicItem {
 
     private int id;
@@ -54,17 +56,17 @@ public abstract class MusicItem {
 
     public void play() {
         this.isPlaying = true;
-        System.out.println("Playing Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
+        Message.send("Playing Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
     }
 
     public void pause() {
         this.isPlaying = false;
-        System.out.println("Pausing Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
+        Message.send("Pausing Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
     }
 
     public void stop() {
         this.isPlaying = false;
-        System.out.println("Stopping Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
+        Message.send("Stopping Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
     }
 
     // toString method
