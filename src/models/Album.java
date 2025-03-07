@@ -17,6 +17,20 @@ public class Album extends MusicItem {
         this.numberOfTracks = Integer.parseInt(parts[6]);
     }
 
+    // Getters
+
+    public String getArtist() {
+        return this.artist;
+    }
+
+    public String getLabel() {
+        return this.label;
+    }
+
+    public int getNumberOfTracks() {
+        return this.numberOfTracks;
+    }
+
     // Play, pause and stop methods
 
     public void play() {
@@ -50,10 +64,22 @@ public class Album extends MusicItem {
     public String getTrigger() {
         return (
                 getInfo() + " of " +
-                        getReleaseYear() + " " +
-                        getTitle() + "by " +
-                        this.artist
+                getReleaseYear() + " " +
+                getTitle() + "by " +
+                this.artist
         );
+    }
+
+    // compare method
+
+    public boolean compare(String[] parts) {
+        boolean identical = (
+                super.compare(parts) &&
+                getArtist().equals(parts[4]) &&
+                getLabel().equals(parts[5]) &&
+                String.valueOf(getNumberOfTracks()).equals(parts[6])
+        );
+        return identical;
     }
 
     // abstract methods

@@ -17,7 +17,7 @@ public class Song extends MusicItem {
         this.duration = Integer.parseInt(parts[6]);
     }
 
-    // Getters and Setters
+    // Getters
 
     public String getArtist() {
         return this.artist;
@@ -29,18 +29,6 @@ public class Song extends MusicItem {
 
     public int getDuration() {
         return this.duration;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
     }
 
     // Play, pause and stop methods
@@ -76,10 +64,22 @@ public class Song extends MusicItem {
     public String getTrigger() {
         return (
                 getInfo() + " of " +
-                        getReleaseYear() + " " +
-                        getTitle() + "by " +
-                        this.artist
+                getReleaseYear() + " " +
+                getTitle() + "by " +
+                this.artist
         );
+    }
+
+    // compare method
+
+    public boolean compare(String[] parts) {
+        boolean identical = (
+                super.compare(parts) &&
+                getArtist().equals(parts[4]) &&
+                getGenre().equals(parts[5]) &&
+                String.valueOf(getDuration()).equals(parts[6])
+        );
+        return identical;
     }
 
     // abstract methods
