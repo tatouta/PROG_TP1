@@ -8,26 +8,26 @@ import java.util.List;
 
 public class CommandProcessor {
 
-    private static final String DEFAULT_COMMANDS_NAME = "commands";
+    private static final String DEFAULT_FILE_NAME = "commands";
 
     // processing command text file method
 
     public static void processCommands(MusicLibrary library) {
-        processFile(library, DEFAULT_COMMANDS_NAME);
+        processFile(library, DEFAULT_FILE_NAME);
     }
 
-    public static void processFile(MusicLibrary library, String commandsName) {
-        Message.send("Sourcing " + commandsName + "...");
-        if (commandsName.isEmpty()) {
-            commandsName = DEFAULT_COMMANDS_NAME;
+    public static void processFile(MusicLibrary library, String fileName) {
+        Message.send("Sourcing " + fileName + "...");
+        if (fileName.isEmpty()) {
+            fileName = DEFAULT_FILE_NAME;
         }
-        String filePath = "data/" + commandsName + ".txt";
+        String filePath = "data/" + fileName + ".txt";
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             Message.send( "Commands in file commands.txt loaded successfully." );
             String command = reader.readLine();
             while(command != null ) {
                 if (!command.isEmpty() && !String.valueOf(command.charAt(0)).equals("#")) {
-                    activateCommand(library, commandsName, command);
+                    activateCommand(library, command, fileName);
                 }
                 command = reader.readLine();
             }
@@ -61,12 +61,12 @@ public class CommandProcessor {
 
     // activation command method
 
-    private static void activateCommand(MusicLibrary library, String commandsName, String command) {
+    private static void activateCommand(MusicLibrary library, String command, String fileName) {
         String action = getAction(command);
         String parameters = getParameters(command, action);
         switch(action.toUpperCase()) {
             case "SOURCE":
-                source(library, parameters, commandsName);
+                source(library, parameters, fileName);
                 break;
             case "LOAD":
                 load(library, parameters);
@@ -105,11 +105,11 @@ public class CommandProcessor {
 
     // method methods
 
-    private static void source(MusicLibrary library, String parameters, String commandsName) {
-        if (!commandsName.equals(parameters)) {
+    private static void source(MusicLibrary library, String parameters, String fileName) {
+        if (!fileName.equals(parameters)) {
             processFile(library, parameters);
         } else {
-            Message.send("Currently sourcing " + commandsName + "; SOURCE ignored.");
+            Message.send("Currently sourcing " + fileName + "; SOURCE ignored.");
         }
     }
 
