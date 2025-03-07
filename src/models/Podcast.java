@@ -16,6 +16,20 @@ public class Podcast extends MusicItem {
         this.episodeNumber = Integer.parseInt(parts[6]);
     }
 
+    // Getters
+
+    public String getHost() {
+        return this.host;
+    }
+
+    public String getTopic() {
+        return this.topic;
+    }
+
+    public int getEpisodeNumber() {
+        return this.episodeNumber;
+    }
+
     // Play, pause and stop methods
 
     public void play() {
@@ -49,10 +63,22 @@ public class Podcast extends MusicItem {
     public String getTrigger() {
         return (
                 getInfo() + " of " +
-                        getReleaseYear() + " " +
-                        getTitle() + "by " +
-                        this.host
+                getReleaseYear() + " " +
+                getTitle() + "by " +
+                this.host
         );
+    }
+
+    // compare method
+
+    public boolean compare(String[] parts) {
+        boolean identical = (
+                super.compare(parts) &&
+                getArtist().equals(parts[4]) &&
+                getTopic().equalsIgnoreCase(parts[5]) &&
+                String.valueOf(getEpisodeNumber()).equals(parts[6])
+        );
+        return identical;
     }
 
     // abstract methods

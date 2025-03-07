@@ -10,6 +10,23 @@ public class CommandProcessor {
 
     private static final String DEFAULT_FILE_NAME = "commands";
 
+    private static final int NUMBER_OF_ELEMENT_TO_ADD = 7;
+
+    private static final int ID_MIN = 1;
+
+    private static final int RELEASE_YEAR_MIN = 1850;
+    private static final int RELEASE_YEAR_MAX = 2025;
+
+    private static final int DURATION_MIN = 1;
+    private static final int DURATION_MAX = 36000;
+
+    private static final int NUMBER_OF_TRACKS_MIN = 1;
+    private static final int NUMBER_OF_TRACKS_MAX = 100;
+
+    private static final int EPISODE_NUMBER_MIN = 1;
+    private static final int EPISODE_NUMBER_MAX = 500;
+
+
     // processing command text file method
 
     public static void processCommands(MusicLibrary library) {
@@ -71,7 +88,7 @@ public class CommandProcessor {
             case "SOURCE" -> source(library, parameters, fileName);
             case "LOAD" -> load(library, parameters);
             case "SAVE" -> save(library, parameters);
-            case "ADD" -> add(library, parameters);
+            case "ADD" -> add(library, parameters, commandLine);
             case "REMOVE" -> remove(library, parameters);
             case "SEARCH" -> search(library, parameters);
             case "PLAY" -> play(library, parameters);
@@ -99,8 +116,7 @@ public class CommandProcessor {
     private static boolean load(MusicLibrary library, String parameters) {
         boolean error = false;
         List<MusicItem> items = MusicLibraryFileHandler.loadLibrary(parameters);
-        for (int i = 0; i < items.size(); i++) {
-            MusicItem item = items.get(i);
+        for (MusicItem item : items) {
             library.addItem(item);
         }
         return error;
@@ -112,12 +128,108 @@ public class CommandProcessor {
         return error;
     }
 
-    private static boolean add(MusicLibrary library, String parameters) {
-        boolean error = false;
-        String[] parts = parameters.split(",");
-        MusicItem item = MusicItemFactory.createFromCSV(parts);
-        library.addItem(item);
-        Message.send(item.getTrigger() + " added to the library successfully.");
+    private static boolean add(MusicLibrary library, String parameters, String commandLine) {
+        boolean error = true;
+        String errorMessage = "Invalid ADD command: " + commandLine;
+        if (parameters.isEmpty()) {
+            Message.send(errorMessage);
+        } else {
+            errorMessage = "Wrong number of elements: " + commandLine;
+            String[] parts = parameters.split(",");
+            if (parts.length != NUMBER_OF_ELEMENT_TO_ADD) {
+                Message.send(errorMessage);
+            } else {
+                errorMessage = "ADD " + parameters + " failed; item already in library";
+                if (library.compareItems(parts)) {
+                    Message.send(errorMessage);
+                } else {
+                    errorMessage = "Wrong music item: " + commandLine;
+                    String type = parts[0];
+                    boolean isSong = type.equalsIgnoreCase("song");
+                    boolean isAlbum = type.equalsIgnoreCase("album");
+                    boolean isPodcast = type.equalsIgnoreCase("podcast");
+                    if (!isSong && !isAlbum && !isPodcast) {
+                        Message.send(errorMessage);
+                    } else {
+                        errorMessage = "Invalid music ID: " + commandLine;
+                        try {
+                            int id = Integer.parseInt(parts[1]);
+                            if (id < ID_MIN) {
+                                Message.send(errorMessage);
+                            } else {
+                                errorMessage = "ADD " + parameters + " failed; ID already used.";
+                                if (library.getItem(id) != null) {
+                                    Message.send(errorMessage);
+                                } else {
+                                    errorMessage = "Invalid release year: " + commandLine;
+                                    try {
+                                        int releaseYear = Integer.parseInt(parts[3]);
+                                        if (releaseYear < RELEASE_YEAR_MIN || releaseYear > RELEASE_YEAR_MAX) {
+                                            Message.send(errorMessage);
+                                        } else {
+                                            boolean success = false;
+                                            if (isSong) {
+                                                errorMessage = "Invalid duration: " + commandLine;
+                                                try {
+                                                    int duration = Integer.parseInt(parts[6]);
+                                                    if (duration < DURATION_MIN || duration > DURATION_MAX) {
+                                                        Message.send(errorMessage);
+                                                    } else {
+                                                        success = true;
+                                                    }
+                                                } catch (NumberFormatException _) {
+                                                    Message.send(errorMessage);
+                                                }
+                                            } else if (isAlbum) {
+                                                errorMessage = "Invalid number of tracks: " + commandLine;
+                                                try {
+                                                    int numberOfTracks = Integer.parseInt(parts[6]);
+                                                    if (numberOfTracks < NUMBER_OF_TRACKS_MIN || numberOfTracks > NUMBER_OF_TRACKS_MAX) {
+                                                        Message.send(errorMessage);
+                                                    } else {
+                                                        success = true;
+                                                    }
+                                                } catch (NumberFormatException _) {
+                                                    Message.send(errorMessage);
+                                                }
+                                            } else {
+                                                errorMessage = "Invalid episode number: " + commandLine;
+                                                try {
+                                                    int episodeNumber = Integer.parseInt(parts[6]);
+                                                    if (episodeNumber < EPISODE_NUMBER_MIN || episodeNumber > EPISODE_NUMBER_MAX) {
+                                                        Message.send(errorMessage);
+                                                    } else {
+                                                        success = true;
+                                                    }
+                                                } catch (NumberFormatException _) {
+                                                    Message.send(errorMessage);
+                                                }
+                                            }
+                                            if (success) {
+                                                errorMessage = "ADD item " + parameters + " failed; no such item";
+                                                MusicItem item = MusicItemFactory.createFromCSV(parts);
+                                                if (item == null) {
+                                                    Message.send(errorMessage);
+                                                } else {
+                                                    library.addItem(item);
+                                                    Message.send(item.getTrigger() + " added to the library successfully.");
+                                                    error = false;
+                                                }
+                                            }
+                                        }
+                                    } catch (NumberFormatException _) {
+                                        Message.send(errorMessage);
+                                    }
+                                }
+                            }
+                        } catch (NumberFormatException _) {
+                            Message.send(errorMessage);
+                        }
+                    }
+                }
+
+            }
+        }
         return error;
     }
 

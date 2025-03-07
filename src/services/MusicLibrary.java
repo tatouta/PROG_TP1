@@ -102,6 +102,18 @@ public class MusicLibrary {
         Message.send(display);
     }
 
+    public boolean compareItems(String[] parts) {
+        boolean identical = false;
+        for (int i = 0; i < this.items.size(); i++) {
+            MusicItem item = this.items.get(i);
+            if (item.compare(parts)) {
+                identical = true;
+                break;
+            }
+        }
+        return identical;
+    }
+
     public void playItem(MusicItem item) {
         this.playing = item;
         this.playing.play();
