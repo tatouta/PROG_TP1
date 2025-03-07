@@ -35,17 +35,17 @@ public class Album extends MusicItem {
 
     public void play() {
         setIsPlaying(true);
-        Message.send("Playing " + getTrigger() + ".");
+        Message.send("Playing " + getInfo() + ".");
     }
 
     public void pause() {
         setIsPlaying(false);
-        Message.send("Pausing " + getTrigger() + ".");
+        Message.send("Pausing " + getInfo() + ".");
     }
 
     public void stop() {
         setIsPlaying(false);
-        Message.send("Stopping " + getTrigger() + ".");
+        Message.send("Stopping " + getInfo() + ".");
     }
 
     // Message methods
@@ -61,13 +61,8 @@ public class Album extends MusicItem {
         return string;
     }
 
-    public String getTrigger() {
-        return (
-                getInfo() + " of " +
-                getReleaseYear() + " " +
-                getTitle() + "by " +
-                this.artist
-        );
+    public String getType() {
+        return "Album";
     }
 
     // compare method
@@ -98,7 +93,12 @@ public class Album extends MusicItem {
     }
 
     public String getInfo() {
-        return "Album";
+        return (
+                getType() + " of " +
+                getReleaseYear() + " " +
+                getTitle() + " by " +
+                this.artist
+        );
     }
 
 }

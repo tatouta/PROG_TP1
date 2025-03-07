@@ -83,20 +83,14 @@ public abstract class MusicItem {
         );
     }
 
-    public String getTrigger() {
-        return (
-                "Item " +
-                getId() + " of " +
-                getReleaseYear() + " " +
-                getTitle()
-        );
+    public String getType() {
+        return "Item";
     }
 
     // compare method
 
     public boolean compare(String[] parts) {
         boolean identical = (
-                String.valueOf(getId()).equals(parts[1]) &&
                 getTitle().equals(parts[2]) &&
                 String.valueOf(getReleaseYear()).equals(parts[3])
         );

@@ -1,2 +1,1 @@
-ADD song,1,Imagine,1971,John Lennon,Rock,183
-ADD song,1,Imagine,1971,John Lennon,Rock,183
+ADD podcast,6,Science Weekly,2022,John Smith,Science,50
