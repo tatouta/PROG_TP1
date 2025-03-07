@@ -2,7 +2,7 @@ package models;
 
 import ui.Message;
 
-public class Song extends Melodie {
+public class Song extends MusicItem {
 
     private String artist;
     private String genre;
