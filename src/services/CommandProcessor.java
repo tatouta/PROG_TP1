@@ -279,20 +279,20 @@ public class CommandProcessor {
         }
 
         // Vérifie si un élément est en cours de lecture
-        if (library.getPlayingItem() == null) {
+        if (!library.isPlaying()) {
             Message.send("There is no item currently playing.");
             return true;
         }
 
         // Vérifie si l'élément est déjà en pause
-        if (library.getPlayingItem().isPaused()) {
-            Message.send(library.getPlayingItem().getInfo() + " is already on pause.");
+        if (library.isPlaying().isPaused()) {
+            Message.send(library.isPlaying().getInfo() + " is already on pause.");
             return true; // Indique une erreur
         }
 
         // Met en pause l'élément en cours de lecture
         library.pauseItem();
-        Message.send("Pausing " + library.getPlayingItem().getInfo() + ".");
+        Message.send("Pausing " + library.isPlaying().getInfo() + ".");
 
         // Si aucune erreur n'est survenue, retourne false
         return error;
