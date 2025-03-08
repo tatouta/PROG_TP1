@@ -8,21 +8,25 @@ import java.util.ArrayList;
 public class MusicLibrary {
 
     private ArrayList <MusicItem> items;
-    private MusicItem playing;
+
     private MusicItem search;
+
+    private MusicItem playing;
+    private boolean paused;
 
     public MusicLibrary() {
         this.items = new ArrayList<>();
+        this.paused = false;
     }
 
-    public MusicLibrary(ArrayList <MusicItem> items) {
-        this.items = items;
+    // Getter
+
+    public MusicItem getSearch() {
+        return this.search;
     }
 
-    // item methods
-
-    public void addItem( MusicItem item ) {
-        this.items.add(item);
+    public MusicItem getPlaying() {
+        return this.playing;
     }
 
     public int getIndex(int id) {
@@ -67,6 +71,30 @@ public class MusicLibrary {
         return item;
     }
 
+    // States
+
+    public boolean isSearch() {
+        return this.search != null;
+    }
+
+    public boolean isPlaying() {
+        return this.playing != null;
+    }
+
+    public boolean isPaused() {
+        return this.paused;
+    }
+
+    public boolean isEmpty() {
+        return this.items.isEmpty();
+    }
+
+    // item methods
+
+    public void addItem( MusicItem item ) {
+        this.items.add(item);
+    }
+
     public void removeItem( int id ) {
         int index = getIndex(id);
         if (index > -1) {
@@ -74,16 +102,8 @@ public class MusicLibrary {
         }
     }
 
-    public void searchItem(MusicItem item) {
-        this.search = item;
-    }
-
-    public boolean isPlaying() {
-        return this.playing != null;
-    }
-
     public void listAllItems() {
-        String display = "Library:" + "\n";
+        String display = "";
         int size = this.items.size();
         int last = size - 1;
         for (int i = 0; i < size; i++) {
@@ -108,9 +128,14 @@ public class MusicLibrary {
         return identical;
     }
 
+    public void searchItem(MusicItem item) {
+        this.search = item;
+    }
+
     public void playItem(MusicItem item) {
         this.playing = item;
         this.playing.play();
+        this.paused = false;
     }
 
     public void playItem() {
@@ -133,15 +158,13 @@ public class MusicLibrary {
 
     public void pauseItem() {
         this.playing.pause();
+        this.paused = true;
     }
 
     public void stopItem() {
         this.playing.stop();
         this.playing = null;
-    }
-
-    public boolean isEmpty() {
-        return this.items.isEmpty();
+        this.paused = false;
     }
 
     public void clearAllItems() {
