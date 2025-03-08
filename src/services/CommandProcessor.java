@@ -103,10 +103,10 @@ public class CommandProcessor {
             case "ADD" -> add(library, parameters, commandLine);
             case "REMOVE" -> remove(library, parameters, commandLine);
             case "SEARCH" -> search(library, parameters, commandLine);
-            case "PLAY" -> play(library, parameters);
-            case "PAUSE" -> pause(library);
-            case "STOP" -> stop(library);
-            case "LIST" -> list(library);
+            case "PLAY" -> play(library, parameters, commandLine);
+            case "PAUSE" -> pause(library, parameters, commandLine);
+            case "STOP" -> stop(library, parameters, commandLine);
+            case "LIST" -> list(library, parameters, commandLine);
             case "CLEAR" -> clear(library, parameters, commandLine);
             case "EXIT" -> exit(library, parameters, commandLine);
             default -> unknown(commandLine);
@@ -253,37 +253,89 @@ public class CommandProcessor {
         return success;
     }
 
-    private static boolean play(MusicLibrary library, String parameters) {
+    private static boolean play(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
+        MusicItem item = null;
         String[] specifications = parameters.split(" by ");
-        if (parameters.isEmpty()) {
-            library.playItem();
+        if (verifyIsPlaying(library)) {
+            Message.send(library.getPlaying().getInfo() + " is already playing.");
+        } else if (!verifyFullParameters(parameters)) {
+            if (verifyIsPlaying(library)) {
+                Message.send(library.getPlaying().getInfo() + " is already playing");
+            } else if (!verifyIsSearch(library)) {
+                Message.send("No item to PLAY.");
+            } else {
+                item = library.getSearch();
+            }
         } else if (specifications.length == 1) {
-            int id = Integer.parseInt(specifications[0]);
-            library.playItem(id);
+            String idString = specifications[0];
+            if (!verifyId(idString)) {
+                Message.send("Invalid ID for PLAY command: " + idString);
+            } else {
+                int id = Integer.parseInt(idString);
+                item = library.getItem(id);
+                if (!verifyItem(item)) {
+                    Message.send("PLAY item ID " + idString + " failed; no such item.");
+                }
+            }
         } else if (specifications.length == 2) {
             String title = specifications[0];
             String artist = specifications[1];
-            library.playItem(title, artist);
+            item = library.getItem(title, artist);
+            if (!verifyItem(item)) {
+                Message.send("PLAY item: " + title + " by " + artist + " failed; no such item.");
+            }
+        }
+        if (verifyItem(item)) {
+            Message.send("Playing " + item.getInfo() + ".");
+            success = true;
+            library.playItem(item);
         }
         return success;
     }
 
-    private static boolean pause(MusicLibrary library) {
+    private static boolean pause(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
-        library.pauseItem();
+        if (verifyFullParameters(parameters)) {
+            Message.send("Invalid PAUSE command: " + commandLine);
+        } else if (!verifyIsPlaying(library)) {
+            Message.send("No item to PAUSE");
+        } else if (verifyIsPaused(library)) {
+            Message.send(library.getPlaying().getInfo() + "; is already on pause.");
+        } else {
+            Message.send("Pausing " + library.getPlaying().getInfo() + ".");
+            success = true;
+            library.pauseItem();
+        }
         return success;
     }
 
-    private static boolean stop(MusicLibrary library) {
+    private static boolean stop(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
+        if (verifyFullParameters(parameters)) {
+            Message.send("nvalid STOP command: " + commandLine);
+        } else if (!verifyIsPlaying(library)) {
+            Message.send("No item to STOP.");
+        } else {
+            Message.send("Stopping " + library.getPlaying().getInfo() + ".");
+            success = true;
+            library.stopItem();
+        }
         library.stopItem();
         return success;
     }
 
-    private static boolean list(MusicLibrary library) {
+    private static boolean list(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
-        library.listAllItems();
+        if (verifyFullParameters(parameters)) {
+            Message.send("Invalid LIST command: " + commandLine);
+        } else if (verifyIsEmpty(library)) {
+            Message.send("The library is empty.");
+        } else {
+            Message.send("Library:");
+            success = true;
+            library.listAllItems();
+        }
         return success;
     }
 
@@ -291,7 +343,7 @@ public class CommandProcessor {
         boolean success = false;
         if (verifyFullParameters(parameters)) {
             Message.send("Invalid CLEAR command: " + commanLine);
-        } else if (library.isEmpty()) {
+        } else if (verifyIsEmpty(library)) {
             Message.send("Music library is already empty");
         } else {
             Message.send("Music library has been cleared successfully");
@@ -423,8 +475,20 @@ public class CommandProcessor {
         return item != null;
     }
 
+    private static boolean verifyIsEmpty(MusicLibrary library) {
+        return !library.isEmpty();
+    }
+
+    private static boolean verifyIsSearch(MusicLibrary library) {
+        return library.isSearch();
+    }
+
     private static boolean verifyIsPlaying(MusicLibrary library) {
-        return !library.isPlaying();
+        return library.isPlaying();
+    }
+
+    private static boolean verifyIsPaused(MusicLibrary library) {
+        return !library.isPaused();
     }
 
 }
