@@ -10,7 +10,7 @@ public class Podcast extends MusicItem {
 
     public Podcast(String[] parts) {
         // might get an error for id and releaseYear (string not convertable to integer)
-        super(Integer.parseInt(parts[1]), parts[2], Integer.parseInt(parts[1]));
+        super(Integer.parseInt(parts[1]), parts[2], Integer.parseInt(parts[3]));
         this.host = parts[4];
         this.topic = parts[5];
         this.episodeNumber = Integer.parseInt(parts[6]);
@@ -48,11 +48,11 @@ public class Podcast extends MusicItem {
 
     public String toString() {
         String string = super.toString();
-        string = getInfo() + " ["  + (
-                string + ", " +
-                "Host=" + this.host + ", " +
-                "Episode Number=" + this.episodeNumber + ", " +
-                "Topic=" + this.topic
+        string = getType() + " [" + (
+                string.substring(1, string.length() - 1) + ", " +
+                "Host=" + getHost() + ", " +
+                "Episode=" + getEpisodeNumber() + ", " +
+                "Topic=" + getTopic()
         ) + "]";
         return string;
     }
@@ -73,11 +73,17 @@ public class Podcast extends MusicItem {
         return identical;
     }
 
+    public boolean compare(MusicItem item) {
+        String csv = item.toCSV();
+        String[] parts = csv.split(",");
+        return compare(parts);
+    }
+
     // abstract methods
 
     public String toCSV() {
         String csv = (
-                getInfo().toLowerCase() + "," +
+                getType().toLowerCase() + "," +
                 getId() + "," +
                 getTitle() + "," +
                 getReleaseYear() + "," +
@@ -90,9 +96,11 @@ public class Podcast extends MusicItem {
 
     public String getInfo() {
         return (
-                getType() + " of " +
-                getReleaseYear() + " " +
-                getTitle() + " by " +
+                getType() + " " +
+                getTitle() + " episode " +
+                getEpisodeNumber() + " of " +
+                getReleaseYear() + " on " +
+                getTopic() + " by " +
                 this.host
         );
     }
