@@ -476,7 +476,7 @@ public class CommandProcessor {
     }
 
     private static boolean verifyIsEmpty(MusicLibrary library) {
-        return !library.isEmpty();
+        return library.isEmpty();
     }
 
     private static boolean verifyIsSearch(MusicLibrary library) {

@@ -34,17 +34,14 @@ public class Podcast extends MusicItem {
 
     public void play() {
         setIsPlaying(true);
-        Message.send("Playing " + getInfo() + ".");
     }
 
     public void pause() {
         setIsPlaying(false);
-        Message.send("Pausing " + getInfo() + ".");
     }
 
     public void stop() {
         setIsPlaying(false);
-        Message.send("Stopping " + getInfo() + ".");
     }
 
     // Message methods
