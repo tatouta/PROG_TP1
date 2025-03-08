@@ -49,11 +49,11 @@ public class Song extends MusicItem {
 
     public String toString() {
         String string = super.toString();
-        string = getInfo() + " [" + (
-                string + ", " +
-                "Artist=" + this.artist + ", " +
-                "Genre=" + this.genre + ", " +
-                "Duration=" + this.duration + "s"
+        string = getType() + " [" + (
+                string.substring(1, string.length() - 1) + ", " +
+                "Artist=" + getArtist() + ", " +
+                "Genre=" + getGenre() + ", " +
+                "Duration=" + getDuration() + "s"
         ) + "]";
         return string;
     }
@@ -74,11 +74,17 @@ public class Song extends MusicItem {
         return identical;
     }
 
+    public boolean compare(MusicItem item) {
+        String csv = item.toCSV();
+        String[] parts = csv.split(",");
+        return compare(parts);
+    }
+
     // abstract methods
 
     public String toCSV() {
         String csv = (
-                getInfo().toLowerCase() + "," +
+                getType().toLowerCase() + "," +
                 getId() + "," +
                 getTitle() + "," +
                 getReleaseYear() + "," +

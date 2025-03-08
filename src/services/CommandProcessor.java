@@ -41,7 +41,7 @@ public class CommandProcessor {
     // processing command text file method
 
     public static void processCommands(MusicLibrary library) {
-        processFile(library, DEFAULT_FILE_NAME);
+        processFile(library, "");
     }
 
     public static void processFile(MusicLibrary library, String fileName) {
@@ -50,13 +50,19 @@ public class CommandProcessor {
         }
         String filePath = "data/" + fileName + ".txt";
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            Message.send("Sourcing " + fileName + "...");
             boolean error = true;
+            int line = 1;
             String commandLine = reader.readLine();
             while(commandLine != null && !getExiting()) {
                 if (!commandLine.isEmpty() && !String.valueOf(commandLine.charAt(0)).equals("#")) {
+                    //Message.send(String.valueOf(line));
+                    //Message.send(commandLine);
                     boolean success = activateCommandLine(library, commandLine, fileName);
+                    //Message.send("==========================================================================================");
                     error = error && !success;
                 }
+                line += 1;
                 commandLine = reader.readLine();
             }
             setExiting(false);
@@ -96,7 +102,7 @@ public class CommandProcessor {
     private static boolean activateCommandLine(MusicLibrary library, String commandLine, String fileName) {
         String command = getCommand(commandLine);
         String parameters = getParameters(commandLine, command);
-        return switch (command.toUpperCase()) {
+        boolean success = switch (command.toUpperCase()) {
             case "SOURCE" -> source(library, parameters, fileName);
             case "LOAD" -> load(library, parameters);
             case "SAVE" -> save(library, parameters);
@@ -111,6 +117,7 @@ public class CommandProcessor {
             case "EXIT" -> exit(library, parameters, commandLine);
             default -> unknown(commandLine);
         };
+        return success;
     }
 
     // method methods
@@ -120,7 +127,6 @@ public class CommandProcessor {
         if (!verifyAvoidingSourceLoop(fileName, parameters)) {
             Message.send("Currently sourcing " + fileName + "; SOURCE ignored.");
         } else {
-            Message.send("Sourcing " + fileName + "...");
             success = true;
             processFile(library, parameters);
         }
@@ -133,10 +139,7 @@ public class CommandProcessor {
         } else {
             Message.send("Loading from file: " + parameters);
         }
-        List<MusicItem> items = MusicLibraryFileHandler.loadLibrary(parameters);
-        for (MusicItem item : items) {
-            library.addItem(item);
-        }
+        library.load("");
         return true;
     }
 
@@ -187,6 +190,7 @@ public class CommandProcessor {
                         Message.send(item.getInfo() + " added to the library successfully.");
                         success = true;
                         library.addItem(item);
+                        library.save("");
                     }
                 }
             }
@@ -204,11 +208,12 @@ public class CommandProcessor {
             int id = Integer.parseInt(parameters);
             MusicItem item = library.getItem(id);
             if (!verifyItem(item)) {
-                Message.send("No item found with ID: " + id);
+                Message.send("REMOVE item " + parameters + " failed; no such item.");
             } else {
-                library.removeItem(id);
-                Message.send("Removed " + item.getInfo() + " successfully");
+                Message.send("Removed " + item.getInfo() + " successfully.");
                 success = true;
+                library.removeItem(id);
+                library.save("");
             }
         }
         return success;
@@ -257,12 +262,8 @@ public class CommandProcessor {
         boolean success = false;
         MusicItem item = null;
         String[] specifications = parameters.split(" by ");
-        if (verifyIsPlaying(library)) {
-            Message.send(library.getPlaying().getInfo() + " is already playing.");
-        } else if (!verifyFullParameters(parameters)) {
-            if (verifyIsPlaying(library)) {
-                Message.send(library.getPlaying().getInfo() + " is already playing");
-            } else if (!verifyIsSearch(library)) {
+        if (!verifyFullParameters(parameters)) {
+            if (!verifyIsSearch(library)) {
                 Message.send("No item to PLAY.");
             } else {
                 item = library.getSearch();
@@ -287,9 +288,19 @@ public class CommandProcessor {
             }
         }
         if (verifyItem(item)) {
-            Message.send("Playing " + item.getInfo() + ".");
-            success = true;
-            library.playItem(item);
+            if (verifyIsPlaying(library)) {
+                if (library.getPlaying().compare(item)) {
+                    Message.send(library.getPlaying().getInfo() + " is already playing.");
+                    item = null;
+                } else {
+                    stop(library, "", "");
+                }
+            }
+            if (verifyItem(item)) {
+                Message.send("Playing " + item.getInfo() + ".");
+                success = true;
+                library.playItem(item);
+            }
         }
         return success;
     }
@@ -321,7 +332,6 @@ public class CommandProcessor {
             success = true;
             library.stopItem();
         }
-        library.stopItem();
         return success;
     }
 
@@ -346,9 +356,10 @@ public class CommandProcessor {
         } else if (verifyIsEmpty(library)) {
             Message.send("Music library is already empty");
         } else {
-            Message.send("Music library has been cleared successfully");
+            Message.send("Music library has been cleared successfully.");
             success = true;
             library.clearAllItems();
+            library.save("");
         }
         return success;
     }
@@ -386,7 +397,7 @@ public class CommandProcessor {
     // verify methods
 
     private static boolean verifyAvoidingSourceLoop(String currentFileName, String toFileName) {
-        return !currentFileName.equals(toFileName);
+        return currentFileName == null || !currentFileName.equals(toFileName);
     }
 
     private static boolean verifyFullParameters(String parameters) {

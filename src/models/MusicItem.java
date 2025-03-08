@@ -76,11 +76,11 @@ public abstract class MusicItem {
     // toString method
 
     public String toString() {
-        return (
-                "Id=" + getId() + ", " +
+        return "[" +  (
+                "ID=" + getId() + ", " +
                 "Title=" + getTitle() + ", " +
                 "Release Year=" + this.releaseYear
-        );
+        ) + "]";
     }
 
     public String getType() {
@@ -95,6 +95,12 @@ public abstract class MusicItem {
                 String.valueOf(getReleaseYear()).equals(parts[3])
         );
         return identical;
+    }
+
+    public boolean compare(MusicItem item) {
+        String csv = item.toCSV();
+        String[] parts = csv.split(",");
+        return compare(parts);
     }
 
     // Abstrait methods

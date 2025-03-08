@@ -4,6 +4,7 @@ import models.MusicItem;
 import ui.Message;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MusicLibrary {
 
@@ -17,6 +18,7 @@ public class MusicLibrary {
     public MusicLibrary() {
         this.items = new ArrayList<>();
         this.paused = false;
+        load("");
     }
 
     // Getter
@@ -169,6 +171,13 @@ public class MusicLibrary {
 
     public void clearAllItems() {
         this.items.clear();
+    }
+
+    public void load(String filePath) {
+        List<MusicItem> items = MusicLibraryFileHandler.loadLibrary(filePath);
+        for (MusicItem item : items) {
+            addItem(item);
+        }
     }
 
     public void save(String filePath) {

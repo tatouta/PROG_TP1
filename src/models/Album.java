@@ -10,7 +10,7 @@ public class Album extends MusicItem {
 
     public Album(String[] parts) {
         // might get an error for id and releaseYear (string not convertable to integer)
-        super(Integer.parseInt(parts[1]), parts[2], Integer.parseInt(parts[1]));
+        super(Integer.parseInt(parts[1]), parts[2], Integer.parseInt(parts[3]));
         // might get an error for numberOfTracks (string not convertable to integer)
         this.artist = parts[4];
         this.label = parts[5];
@@ -49,11 +49,11 @@ public class Album extends MusicItem {
 
     public String toString() {
         String string = super.toString();
-        string = getInfo() + " ["  + (
-                string + ", " +
-                "Artist=" + this.artist + ", " +
-                "Number Of Tracks=" + this.numberOfTracks + ", " +
-                "Label=" + this.label
+        string = getType() + " [" + (
+                string.substring(1, string.length() - 1) + ", " +
+                "Artist=" + getArtist() + ", " +
+                "Tracks=" + getNumberOfTracks() + ", " +
+                "Label=" + getLabel()
         ) + "]";
         return string;
     }
@@ -74,11 +74,17 @@ public class Album extends MusicItem {
         return identical;
     }
 
+    public boolean compare(MusicItem item) {
+        String csv = item.toCSV();
+        String[] parts = csv.split(",");
+        return compare(parts);
+    }
+
     // abstract methods
 
     public String toCSV() {
         String csv = (
-                getInfo().toLowerCase() + "," +
+                getType().toLowerCase() + "," +
                 getId() + "," +
                 getTitle() + "," +
                 getReleaseYear() + "," +
@@ -91,9 +97,10 @@ public class Album extends MusicItem {
 
     public String getInfo() {
         return (
-                getType() + " of " +
-                getReleaseYear() + " " +
-                getTitle() + " by " +
+                getType() + " " +
+                getTitle() + " of " +
+                getReleaseYear() + " with " +
+                getNumberOfTracks() + " tracks by " +
                 this.artist
         );
     }
