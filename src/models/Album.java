@@ -89,8 +89,8 @@ public class Album extends MusicItem {
                 getTitle() + "," +
                 getReleaseYear() + "," +
                 this.artist + "," +
-                this.numberOfTracks + "," +
-                this.label
+                this.label + "," +
+                this.numberOfTracks
         );
         return csv;
     }

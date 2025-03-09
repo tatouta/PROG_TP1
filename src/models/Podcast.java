@@ -88,8 +88,8 @@ public class Podcast extends MusicItem {
                 getTitle() + "," +
                 getReleaseYear() + "," +
                 this.host + "," +
-                this.episodeNumber + "," +
-                this.topic
+                this.topic  + "," +
+                this.episodeNumber
         );
         return csv;
     }

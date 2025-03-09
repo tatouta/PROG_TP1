@@ -121,7 +121,7 @@ public class CommandProcessor {
     }
 
     // method methods
-
+    // This method executes commands from a file.
     private static boolean source(MusicLibrary library, String parameters, String fileName) {
         boolean success = false;
         if (!verifyAvoidingSourceLoop(fileName, parameters)) {
@@ -133,6 +133,7 @@ public class CommandProcessor {
         return success;
     }
 
+    // This method loads music items from a file.
     private static boolean load(MusicLibrary library, String parameters) {
         if (!verifyFullParameters(parameters)) {
             Message.send("Loading from default library file");
@@ -142,7 +143,7 @@ public class CommandProcessor {
         library.load("");
         return true;
     }
-
+    // This method saves the library to a file.
     private static boolean save(MusicLibrary library, String parameters) {
         if (!verifyFullParameters(parameters)) {
             Message.send("Saving to default library file");
@@ -153,6 +154,7 @@ public class CommandProcessor {
         return true;
     }
 
+    // This method adds a music item to the library and saves it.
     private static boolean add(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
         if (!verifyFullParameters(parameters)) {
@@ -198,6 +200,7 @@ public class CommandProcessor {
         return success;
     }
 
+    // This method removes a music item by ID and saves the library.
     private static boolean remove(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
         if (!verifyFullParameters(parameters)) {
@@ -219,6 +222,7 @@ public class CommandProcessor {
         return success;
     }
 
+    // This method finds a music item by ID, title, or artist and prepares it for playback.
     private static boolean search(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
         MusicItem item = null;
@@ -258,6 +262,7 @@ public class CommandProcessor {
         return success;
     }
 
+    // This method plays a music item by ID, title, or artist, stopping any currently playing item.
     private static boolean play(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
         MusicItem item = null;
@@ -305,6 +310,7 @@ public class CommandProcessor {
         return success;
     }
 
+    //This method pauses the currently playing item.
     private static boolean pause(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
         if (verifyFullParameters(parameters)) {
@@ -321,6 +327,7 @@ public class CommandProcessor {
         return success;
     }
 
+    // This method stops the currently playing item.
     private static boolean stop(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
         if (verifyFullParameters(parameters)) {
@@ -334,7 +341,7 @@ public class CommandProcessor {
         }
         return success;
     }
-
+    // This method displays all items in the library.
     private static boolean list(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
         if (verifyFullParameters(parameters)) {
@@ -349,6 +356,7 @@ public class CommandProcessor {
         return success;
     }
 
+    // This method clears the library and saves it.
     private static boolean clear(MusicLibrary library, String parameters, String commanLine) {
         boolean success = false;
         if (verifyFullParameters(parameters)) {
