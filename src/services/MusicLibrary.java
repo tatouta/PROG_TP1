@@ -21,7 +21,7 @@ public class MusicLibrary {
         load("");
     }
 
-    // Getter
+    // Getters
 
     public MusicItem getSearch() {
         return this.search;

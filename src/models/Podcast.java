@@ -66,7 +66,7 @@ public class Podcast extends MusicItem {
     public boolean compare(String[] parts) {
         boolean identical = (
                 super.compare(parts) &&
-                getArtist().equals(parts[4]) &&
+                (getArtist() == null || getArtist().equals(parts[4])) &&
                 getTopic().equalsIgnoreCase(parts[5]) &&
                 String.valueOf(getEpisodeNumber()).equals(parts[6])
         );
