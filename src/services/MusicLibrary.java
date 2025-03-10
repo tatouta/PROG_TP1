@@ -15,6 +15,7 @@ public class MusicLibrary {
     private MusicItem playing;
     private boolean paused;
 
+    // constructor
     public MusicLibrary() {
         this.items = new ArrayList<>();
         this.paused = false;
@@ -31,6 +32,7 @@ public class MusicLibrary {
         return this.playing;
     }
 
+    // get the index in the list of items searching by id.
     public int getIndex(int id) {
         int index = -1;
         for (int i = 0; i < this.items.size(); i++) {
@@ -43,6 +45,7 @@ public class MusicLibrary {
         return index;
     }
 
+    // get the index in the list of items searching by title and artist.
     public int getIndex(String title, String artist) {
         int index = -1;
         for (int i = 0; i < this.items.size(); i++) {
@@ -55,6 +58,7 @@ public class MusicLibrary {
         return index;
     }
 
+    // get the item in the list of items searching by id.
     public MusicItem getItem(int id) {
         MusicItem item = null;
         int index = getIndex(id);
@@ -64,6 +68,7 @@ public class MusicLibrary {
         return item;
     }
 
+    // get the item in the list of items searching by title and artist.
     public MusicItem getItem(String title, String artist) {
         MusicItem item = null;
         int index = getIndex(title, artist);
@@ -93,10 +98,12 @@ public class MusicLibrary {
 
     // item methods
 
+    // To add a music item to the library.
     public void addItem( MusicItem item ) {
         this.items.add(item);
     }
 
+    // To remove the music item with the specified ID from the library.
     public void removeItem( int id ) {
         int index = getIndex(id);
         if (index > -1) {
@@ -104,6 +111,7 @@ public class MusicLibrary {
         }
     }
 
+    // To list all the music items present in the library.
     public void listAllItems() {
         String display = "";
         int size = this.items.size();
@@ -118,6 +126,7 @@ public class MusicLibrary {
         Message.send(display);
     }
 
+    // compare an item between another item and if they are the same
     public boolean compareItems(String[] parts) {
         boolean identical = false;
         for (int i = 0; i < this.items.size(); i++) {
@@ -130,27 +139,31 @@ public class MusicLibrary {
         return identical;
     }
 
+    // This method finds a music item
     public void searchItem(MusicItem item) {
         this.search = item;
     }
 
+    // To start/play the music item
     public void playItem(MusicItem item) {
         this.playing = item;
         this.playing.play();
         this.paused = false;
     }
 
+    // play the searched item
     public void playItem() {
         playItem(this.search);
     }
-    
+
+    // To start/play the music item with the specified ID.
     public void playItem(int id) {
         MusicItem item = getItem(id);
         if (item != null) {
             playItem(item);
         }
     }
-
+    // To start/play the music item with the specified title and artist.
     public void playItem(String title, String artist) {
         MusicItem item = getItem(title, artist);
         if (item != null) {
@@ -158,21 +171,25 @@ public class MusicLibrary {
         }
     }
 
+    // To pause the music item that is currently playing.
     public void pauseItem() {
         this.playing.pause();
         this.paused = true;
     }
 
+    // To stop the music item that is currently playing.
     public void stopItem() {
         this.playing.stop();
         this.playing = null;
         this.paused = false;
     }
 
+    // To clear the list of all music items present in the library.
     public void clearAllItems() {
         this.items.clear();
     }
 
+    // This method loads music items from a file.
     public void load(String filePath) {
         List<MusicItem> items = MusicLibraryFileHandler.loadLibrary(filePath);
         for (MusicItem item : items) {
@@ -180,6 +197,7 @@ public class MusicLibrary {
         }
     }
 
+    // This method saves the library to a specified file.
     public void save(String filePath) {
         MusicLibraryFileHandler.saveLibrary(this.items, filePath);
     }

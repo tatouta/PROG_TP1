@@ -9,6 +9,7 @@ public abstract class MusicItem {
     private int releaseYear;
     private boolean isPlaying;
 
+    // Constructor
     public MusicItem(int id, String title, int releaseYear) {
         this.id = id;
         this.title = title;
@@ -58,23 +59,23 @@ public abstract class MusicItem {
 
     // Play, pause and stop methods
 
+    // To start playing a music item
     public void play() {
         this.isPlaying = true;
         Message.send("Playing Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
     }
-
+    // To pause the playback a music item.
     public void pause() {
         this.isPlaying = false;
         Message.send("Pausing Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
     }
-
+    // To stop the playback of a music item.
     public void stop() {
         this.isPlaying = false;
         Message.send("Stopping Item" + getId() + " of " + this.releaseYear + " " + getTitle() + ".");
     }
 
-    // toString method
-
+    // To display the information of a music item as a string.
     public String toString() {
         return "[" +  (
                 "ID=" + getId() + ", " +
@@ -83,6 +84,7 @@ public abstract class MusicItem {
         ) + "]";
     }
 
+    // this method gets the type of music item.
     public String getType() {
         return "Item";
     }
@@ -103,7 +105,7 @@ public abstract class MusicItem {
         return compare(parts);
     }
 
-    // Abstrait methods
+    // Abstract methods
 
     public abstract String toCSV();
     public abstract String getInfo();

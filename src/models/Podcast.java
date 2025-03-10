@@ -8,6 +8,7 @@ public class Podcast extends MusicItem {
     private String topic;
     private int episodeNumber;
 
+    // Constructor
     public Podcast(String[] parts) {
         // might get an error for id and releaseYear (string not convertable to integer)
         super(Integer.parseInt(parts[1]), parts[2], Integer.parseInt(parts[3]));
@@ -30,22 +31,20 @@ public class Podcast extends MusicItem {
         return this.episodeNumber;
     }
 
-    // Play, pause and stop methods
-
+    // Start playing the podcast.
     public void play() {
         setIsPlaying(true);
     }
-
+    // Pause the playback of the podcast.
     public void pause() {
         setIsPlaying(false);
     }
-
+    // Stop the playback of the podcast.
     public void stop() {
         setIsPlaying(false);
     }
 
-    // Message methods
-
+    // To display the information of the podcast as a string.
     public String toString() {
         String string = super.toString();
         string = getType() + " [" + (
@@ -81,6 +80,7 @@ public class Podcast extends MusicItem {
 
     // abstract methods
 
+    // This method converts the podcast into a CSV format.
     public String toCSV() {
         String csv = (
                 getType().toLowerCase() + "," +
@@ -94,6 +94,7 @@ public class Podcast extends MusicItem {
         return csv;
     }
 
+    // This method provides a detailed description of the podcast
     public String getInfo() {
         return (
                 getType() + " " +

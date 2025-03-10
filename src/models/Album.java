@@ -8,6 +8,7 @@ public class Album extends MusicItem {
     private String label;
     private int numberOfTracks;
 
+    // Constructor
     public Album(String[] parts) {
         // might get an error for id and releaseYear (string not convertable to integer)
         super(Integer.parseInt(parts[1]), parts[2], Integer.parseInt(parts[3]));
@@ -31,22 +32,20 @@ public class Album extends MusicItem {
         return this.numberOfTracks;
     }
 
-    // Play, pause and stop methods
-
+    // Start playing the album.
     public void play() {
         setIsPlaying(true);
     }
-
+    // Pause the playback the album.
     public void pause() {
         setIsPlaying(false);
     }
-
+    // Stop the playback of the album.
     public void stop() {
         setIsPlaying(false);
     }
 
-    // Message methods
-
+    // To display the information of the album as a string.
     public String toString() {
         String string = super.toString();
         string = getType() + " [" + (
@@ -82,6 +81,7 @@ public class Album extends MusicItem {
 
     // abstract methods
 
+    // This method converts the album into a CSV format.
     public String toCSV() {
         String csv = (
                 getType().toLowerCase() + "," +
@@ -95,6 +95,7 @@ public class Album extends MusicItem {
         return csv;
     }
 
+    // This method provides a detailed description of the album
     public String getInfo() {
         return (
                 getType() + " " +

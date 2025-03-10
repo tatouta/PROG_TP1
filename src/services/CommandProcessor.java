@@ -30,10 +30,12 @@ public class CommandProcessor {
 
     // exiting methods
 
+    // this method gets the exit state for the command file.
     private static boolean getExiting() {
         return exiting;
     }
 
+    // this method set the exit state for the command file.
     private static void setExiting(boolean value) {
         exiting = value;
     }
@@ -44,6 +46,7 @@ public class CommandProcessor {
         processFile(library, "");
     }
 
+    // this method plays a command file
     public static void processFile(MusicLibrary library, String fileName) {
         if (fileName.isEmpty()) {
             fileName = DEFAULT_FILE_NAME;
@@ -76,6 +79,7 @@ public class CommandProcessor {
 
     // command supplies methods
 
+    // this method gets the command word.
     private static String getCommand(String commandLine) {
         String action = "";
         for (int i = 0; i < commandLine.length(); i++) {
@@ -89,6 +93,7 @@ public class CommandProcessor {
         return action;
     }
 
+    // this method gets the parameter line.
     private static String getParameters(String commandLine, String command) {
         String parameters = "";
         if (commandLine.length() > command.length()) {
@@ -121,6 +126,7 @@ public class CommandProcessor {
     }
 
     // method methods
+
     // This method executes commands from a file.
     private static boolean source(MusicLibrary library, String parameters, String fileName) {
         boolean success = false;
@@ -133,7 +139,7 @@ public class CommandProcessor {
         return success;
     }
 
-    // This method loads music items from a file.
+    // This method loads music items from the library.
     private static boolean load(MusicLibrary library, String parameters) {
         if (!verifyFullParameters(parameters)) {
             Message.send("Loading from default library file");
@@ -143,6 +149,7 @@ public class CommandProcessor {
         library.load("");
         return true;
     }
+
     // This method saves the library to a file.
     private static boolean save(MusicLibrary library, String parameters) {
         if (!verifyFullParameters(parameters)) {
@@ -331,7 +338,7 @@ public class CommandProcessor {
     private static boolean stop(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
         if (verifyFullParameters(parameters)) {
-            Message.send("nvalid STOP command: " + commandLine);
+            Message.send("invalid STOP command: " + commandLine);
         } else if (!verifyIsPlaying(library)) {
             Message.send("No item to STOP.");
         } else {
@@ -341,6 +348,7 @@ public class CommandProcessor {
         }
         return success;
     }
+
     // This method displays all items in the library.
     private static boolean list(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
@@ -372,6 +380,7 @@ public class CommandProcessor {
         return success;
     }
 
+    // this method makes the program exit the command file.
     private static boolean exit(MusicLibrary library, String parameters, String commandLine) {
         boolean success = false;
         if (verifyFullParameters(parameters)) {

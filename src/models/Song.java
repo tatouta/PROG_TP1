@@ -8,6 +8,7 @@ public class Song extends MusicItem {
     private String genre;
     private int duration;
 
+    // Constructor
     public Song(String[] parts) {
         // might get an error for id and releaseYear (string not convertable to integer)
         super(Integer.parseInt(parts[1]), parts[2], Integer.parseInt(parts[3]));
@@ -31,33 +32,26 @@ public class Song extends MusicItem {
         return this.duration;
     }
 
-    // Play, pause and stop methods
+    // Start playing the song.
+    public void play() { setIsPlaying(true); }
+    // Pause the playback of the song.
+    public void pause() { setIsPlaying(false); }
+    // Stop the playback of the song.
+    public void stop() { setIsPlaying(false); }
 
-    public void play() {
-        setIsPlaying(true);
-    }
-
-    public void pause() {
-        setIsPlaying(false);
-    }
-
-    public void stop() {
-        setIsPlaying(false);
-    }
-
-    // Message methods
-
+    // To Display the information of the song as a string.
     public String toString() {
         String string = super.toString();
         string = getType() + " [" + (
                 string.substring(1, string.length() - 1) + ", " +
-                "Artist=" + getArtist() + ", " +
-                "Genre=" + getGenre() + ", " +
-                "Duration=" + getDuration() + "s"
+                        "Artist=" + getArtist() + ", " +
+                        "Genre=" + getGenre() + ", " +
+                        "Duration=" + getDuration() + "s"
         ) + "]";
         return string;
     }
 
+    // this method gets the type of music item.
     public String getType() {
         return "Song";
     }
@@ -82,6 +76,7 @@ public class Song extends MusicItem {
 
     // abstract methods
 
+    // This method converts the song into a CSV format.
     public String toCSV() {
         String csv = (
                 getType().toLowerCase() + "," +
@@ -95,6 +90,7 @@ public class Song extends MusicItem {
         return csv;
     }
 
+    // This method provides a detailed description of the song
     public String getInfo() {
         return (
                 getType() + " of " +
